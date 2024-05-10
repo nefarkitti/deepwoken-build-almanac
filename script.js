@@ -143,10 +143,10 @@ function loadBuilds() {
                 }
 
                 if (attunements.length <= 0) {
-                    tags.innerHTML += `<img src="/attunements/no-attunement.png">`
+                    tags.innerHTML += `<img src="attunements/no-attunement.png">`
                 } else {
                     attunements.forEach(attune => {
-                        tags.innerHTML += `<img src="/attunements/${attune.toLowerCase()}.png">`
+                        tags.innerHTML += `<img src="attunements/${attune.toLowerCase()}.png">`
                     })
                 }
                 
