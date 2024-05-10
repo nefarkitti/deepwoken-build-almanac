@@ -313,7 +313,7 @@ function loadBuilds() {
 
                     statistics.appendChild(sp)
                 }
-                statistics.innerHTML += `<br>`
+                statistics.innerHTML += `<hr>`
                 for (let i = 0; i < storeStat.length; i++) {
                     const sp = document.createElement("span")
                     sp.classList.add("statline")
@@ -322,7 +322,7 @@ function loadBuilds() {
 
                     statistics.appendChild(sp)
                 }
-                statistics.innerHTML += `<br>`
+                statistics.innerHTML += `<hr>`
                 for (let i = 0; i < store.length; i++) {
                     const sp = document.createElement("span")
                     sp.classList.add("statline")
@@ -331,7 +331,7 @@ function loadBuilds() {
 
                     statistics.appendChild(sp)
                 }
-                statistics.innerHTML += `<br>`
+                statistics.innerHTML += `<hr>`
                 let mostUsedOath = ""
                 let last = 0
                 for (let i = 0; i < oaths.length; i++) {
