@@ -361,6 +361,7 @@ function loadBuilds() {
                     "Ether Overdrive [LTN]",
                     "Ether Overdrive [SDW]",
                     "Ether Overdrive [WND]",
+                    "Ether Overdrive [MTL]",
                     "Brick Wall",
                     "Not A Scratch",
                     "Unyielding Frost",
