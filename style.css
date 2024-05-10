@@ -680,7 +680,6 @@ textarea:focus, input:focus{
     border-radius: 2px;
     margin: 1px;
     filter: opacity(50%);
-    font-weight: 900;
 }
 span.talent {
     width: fit-content;
@@ -700,7 +699,7 @@ span.talent {
     color: white;
 }
 .charisma {
-    background-color: #30d189;
+    background-color: #03864b;
     color: white;
 }
 .intelligence {
@@ -713,6 +712,10 @@ span.talent {
 }
 .agility {
     background-color: #0084ff;
+    color: white;
+}
+.weapon {
+    background-color: rgb(29, 29, 29);
     color: white;
 }
  

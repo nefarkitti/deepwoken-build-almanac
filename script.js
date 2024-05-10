@@ -11,6 +11,8 @@ const buildName = document.getElementById("buildName")
 const buildLink = document.getElementById("buildLink")
 const modebtn = document.getElementById("modebtn")
 
+buildTable.innerHTML = `<div class="loading"><img src="loading.png"></div>`
+
 function loadBuild(id) {
 
     const xhr = new XMLHttpRequest();
@@ -37,10 +39,16 @@ function modeChange() {
         mode = "delete"
         modebtn.innerHTML = `add mode`
         document.getElementById("addBuild").style.display = `none`
+        document.querySelectorAll(".build").forEach(element=> {
+            element.style.backgroundColor = `rgba(255, 122, 122, 0.3)`
+        })
     } else {
         modebtn.innerHTML = `delete mode`
         mode = "normal"
         document.getElementById("addBuild").style.display = ``
+        document.querySelectorAll(".build").forEach(element=> {
+            element.style.backgroundColor = ``
+        })
     }
 }
 
@@ -123,12 +131,21 @@ function loadBuilds() {
                 let storeStat = ["Strength", "Fortitude", "Agility", "Intelligence", "Willpower", "Charisma"]
                 let shorthand = ["STR", "FTD", "AGL", "INT", "WLL", "CHR"]
                 let store = ["Thundercall", "Frostdraw", "Flamecharm", "Ironsing", "Shadowcast", "Galebreathe"]
+                let elmShorthand = ["LTN", "ICE", "FLM", "IRN", "SDW", "WND"]
+                let storeWPN = ["Heavy Wep.", "Medium Wep.", "Light Wep."]
+                let wpnShorthand = ["HVY", "MED", "LHT"]
                 let stats = []
                 let attunements = []
+                let weapons = []
 
                 store.forEach(attunement => {
                     if (buildData.content.attributes.attunement[attunement] >= 1){
                         attunements.push(attunement)
+                    }
+                })
+                storeWPN.forEach(weapon => {
+                    if (buildData.content.attributes.weapon[weapon] >= 1) {
+                        weapons.push(weapon)
                     }
                 })
                 let STATKEYS = Object.keys(buildData.content.attributes.base)
@@ -142,11 +159,17 @@ function loadBuilds() {
                     })
                 }
 
-                if (attunements.length <= 0) {
+                if (attunements.length >= 0) {
                     tags.innerHTML += `<img src="attunements/no-attunement.png">`
                 } else {
                     attunements.forEach(attune => {
                         tags.innerHTML += `<img src="attunements/${attune.toLowerCase()}.png">`
+                    })
+                }
+
+                if (weapons.length >= 1) {
+                    weapons.forEach(weapon => {
+                        tags.innerHTML += `<span class="weapon">${wpnShorthand[storeWPN.indexOf(weapon)]}</span>`
                     })
                 }
                 
@@ -186,19 +209,19 @@ function loadBuilds() {
                     "Alloyblood",
                     "Reshape and Remold"
                 ]
-                console.log("TALENTS")
-                console.log(buildData.content.talents)
-                buildData.content.talents.forEach(talent => {
-                    if (legendaryTalents.includes(talent)) {
-                        tags.innerHTML += `<span class="talent">${talent}</span>`
-                    }
-                })
+                if (buildData.content.talents) {
+                    buildData.content.talents.forEach(talent => {
+                        if (legendaryTalents.includes(talent)) {
+                            tags.innerHTML += `<span class="talent">${talent}</span>`
+                        }
+                    })
+                }
 
                 div.appendChild(tags)
 
                 let extra = document.createElement("span")
                 extra.classList.add("extra")
-                extra.innerHTML = `${buildData.content.stats.meta.Race} ${buildData.content.stats.meta.Oath}`
+                extra.innerHTML = `<b>${buildData.content.stats.meta.Race} ${buildData.content.stats.meta.Oath}</b>`
         
                 div.appendChild(extra)
 
@@ -224,7 +247,7 @@ function loadBuilds() {
                 }, 100 * index)*/
 
 
-                if (index == data.length) {
+                if (index == data.length && mode == "normal") {
                     buildTable.innerHTML += `
                     <span onclick="showBuildPopup()" class="addBuild" id="addBuild"><i class="fa-solid fa-plus"></i> Add new build</span>
                     `
@@ -275,15 +298,34 @@ function addBuild() {
     loadBuilds()
 }
 
-const funnies = ["Top Chime Silentheart Deto Petra's", "Best PvE", "Godseeker Shadow Crypt", "Blindseer LFT", "Railblade Edenkite Silentheart", "Markor’s Inheritor Blademaster", "Dawnwalker Gale", "El Primo Legion Kata", "Evanspear Chilling", "Frostdraw Stilleto"]
+const funnies = [
+    "Top Chime Silentheart Deto Petra's", 
+    "Best PvE", "Godseeker Shadow Crypt", 
+    "Blindseer LFT", 
+    "Railblade Edenkite Silentheart", 
+    "Markor’s Inheritor Blademaster", 
+    "Dawnwalker Gale", 
+    "El Primo Legion Kata", 
+    "Evanspear Chilling", 
+    "Frostdraw Stilleto",
+    "Duke cosplay",
+    "Ferryman cosplay",
+    "Shadow Contractor Crypt",
+    "Flame Shadow Hero Blade",
+    "Bossraid Oni",
+    "Silentheart Guns",
+    "Godseeker Thundercall Stormseye"
+]
 function showBuildPopup() {
     buildLink.value = ""
     buildName.value = ""
     buildName.placeholder = funnies[Math.ceil(Math.random() * funnies.length-1)]
     popup.style.display = `flex`
+    buildTable.style.pointerEvents = `none`
 }
 function closePopup() {
     popup.style.display = `none`
+    buildTable.style.pointerEvents = `all`
 }
 
 function load() {
