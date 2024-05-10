@@ -251,9 +251,15 @@ function loadBuilds() {
 
                 store.forEach(attunement => {
 
-                    storeAvgStats[attunement] += buildData.content.attributes.attunement[attunement]
+                    if (buildData.content.preShrine) {
+                        storeAvgStats[attunement] += buildData.content.preShrine.attunement[attunement]
+                    } else {
+                        storeAvgStats[attunement] += buildData.content.attributes.attunement[attunement]
+                    }
 
-                    if (buildData.content.attributes.attunement[attunement] >= 1) {
+                    console.log(buildData.content.preShrine.attunement[attunement])
+                    if (buildData.content.attributes.attunement[attunement] >= 1 || buildData.content.preShrine.attunement[attunement] >= 1) {
+                        console.log(`add ${attunement}`)
                         attunements.push(attunement)
                     }
                 })
@@ -275,8 +281,8 @@ function loadBuilds() {
                         "value": val
                     })
                 }
-
-                if (attunements.length >= 0) {
+                console.log(attunements)
+                if (attunements.length <= 0) {
                     tags.innerHTML += `<img src="attunements/no-attunement.png">`
                 } else {
                     attunements.forEach(attune => {
@@ -292,11 +298,15 @@ function loadBuilds() {
 
                 stats.forEach(stat => {
 
-                    storeAvgStats[stat.name] += stat.value
+                    if (buildData.content.preShrine) {
+                        storeAvgStats[stat.name] += buildData.content.preShrine.base[stat.name]
+                    } else {
+                        storeAvgStats[stat.name] += stat.value
+                    }
 
                     //why doesnt this work??
                     //storeAvgStats[stat.name] = storeAvgStats[stat.name] + stat.value
-                    if (stat.value >= 75) {
+                    if (stat.value >= 75 || buildData.content.preShrine.base[stat.name] >= 75) {
                         let short = shorthand[storeStat.indexOf(stat.name)]
                         tags.innerHTML += `<span class="${stat.name.toLowerCase()}">${short}</span>`
                         console.log(stat.name)
