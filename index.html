@@ -21,7 +21,7 @@
 </head>
 <body>
     <div class="bg">
-        <div class="thing"><img src="favicon.png" width="75" height="75" alt="" style="image-rendering: pixelated;"><br>v1</div>
+        <div class="thing"><img src="favicon.png" width="75" height="75" alt="" style="image-rendering: pixelated;"><br>v2</div>
     </div>
     <truecenter class="alt">
         <div class="main-left">
@@ -41,7 +41,14 @@
         <div class="main">
             <div class="actualthing">
                 <div class="title">Almanac</div>
-                <div class="subtitle">Gallery<span class="reset-btn modebtn upperbtn" data-mode="delete" id="deletebtn"><i class="fa-solid fa-trash-can"></i></span> <!--<span class="reset-btn modebtn upperbtn" id="pinbtn" data-mode="pin"><i class="fa-solid fa-thumbtack"></i></span>--></div>
+                <div class="subtitle">
+                    Gallery
+                    <b id="buttons">
+                        <span class="reset-btn modebtn upperbtn" data-mode="delete" id="deletebtn"><i class="fa-solid fa-trash-can"></i></span> 
+                    <!--<span class="reset-btn modebtn upperbtn" id="pinbtn" data-mode="pin"><i class="fa-solid fa-thumbtack"></i></span>-->
+                        <span onclick="showBuildPopup()" class="addBuild reset-btn" id="addBuild"><i class="fa-solid fa-plus"></i> <span>Add new build</span></span>
+                    </b>
+                </div>
                 <div class="checklist" style="user-select: none;">
                     <div id="buildTable">
                         

@@ -11,6 +11,7 @@ const statistics = document.getElementById("statistics")
 
 const buildName = document.getElementById("buildName")
 const buildLink = document.getElementById("buildLink")
+const buildAdd = document.getElementById("addBuild")
 
 buildTable.innerHTML = `<div class="loading"><img src="loading.png"></div>`
 
@@ -146,6 +147,7 @@ let elmShorthand = ["LTN", "ICE", "FLM", "IRN", "SDW", "WND"]
 let storeWPN = ["Heavy Wep.", "Medium Wep.", "Light Wep."]
 let wpnShorthand = ["HVY", "MED", "LHT"]
 let oaths = ["Arcwarder", "Blindseer", "Contractor", "Dawnwalker", "Fadetrimmer", "Jetstriker", "Linkstrider", "Oathless", "Saltchemist", "Silentheart", "Starkindred", "Visionshaper"]
+let races = ["Adret","Etrean","Vesperian","Canor","Capra","Celtor","Chrysid","Felinor","Ganymede","Gremor","Khan","Tiran"]
 
 function loadBuilds() {
     buildTable.innerHTML = `<div class="loading"><img src="loading.png"></div>`
@@ -160,7 +162,8 @@ function loadBuilds() {
 
     if (data.length <= 0) {
         console.log("no builds to load!")
-        buildTable.innerHTML = `<span onclick="showBuildPopup()" class="addBuild" id="addBuild"><i class="fa-solid fa-plus"></i> Add new build</span>`
+        //buildTable.innerHTML = `<span onclick="showBuildPopup()" class="addBuild" id="addBuild"><i class="fa-solid fa-plus"></i> Add new build</span>`
+        addBuild.style.display = ``
         mode = "normal"
         modeHandle("normal")
         return 0
@@ -196,7 +199,20 @@ function loadBuilds() {
         "Saltchemist": 0,
         "Silentheart": 0,
         "Starkindred": 0,
-        "Visionshaper": 0
+        "Visionshaper": 0,
+
+        "Adret": 0,
+        "Etrean": 0,
+        "Vesperian": 0,
+        "Canor": 0,
+        "Capra": 0,
+        "Celtor": 0,
+        "Chrysid": 0,
+        "Felinor": 0,
+        "Ganymede": 0,
+        "Gremor": 0,
+        "Khan": 0,
+        "Tiran": 0
     }
 
     function createBuild(build) {
@@ -217,6 +233,7 @@ function loadBuilds() {
                 console.log(buildData);
 
                 storeAvgStats[buildData.content.stats.meta.Oath] += 1
+                storeAvgStats[buildData.content.stats.meta.Race] += 1
 
                 const div = document.createElement("div")
                 div.id = `build-${build.url}`
@@ -224,6 +241,7 @@ function loadBuilds() {
 
                 // i love webjs!
                 div.setAttribute("onclick", `handleBuildClick("${build.url}")`)
+                div.setAttribute("onmousewheel", "console.log('hi')")
                 div.title = buildData.content.stats.buildName
 
                 const span = document.createElement("span")
@@ -356,6 +374,20 @@ function loadBuilds() {
                 <span>Main Oath:</span><span>${mostUsedOath} (${Math.ceil((last / data.length) *100)}%)</span>
                 </span>
                 `
+                let mostUsedRace = ""
+                last = 0
+                for (let i = 0; i < oaths.length; i++) {
+                    let race = races[i];
+                    if (storeAvgStats[race] >= last) {
+                        mostUsedRace = race
+                        last = storeAvgStats[race]
+                    }
+                }
+                statistics.innerHTML += `
+                <span class="statline">
+                <span>Main Race:</span><span>${mostUsedRace} (${Math.ceil((last / data.length) *100)}%)</span>
+                </span>
+                `
 
                 statistics.innerHTML += `<span style="font-size: 10px;filter: opacity(40%);">* across all builds</span>`
 
@@ -400,9 +432,18 @@ function loadBuilds() {
 
                 let extra = document.createElement("span")
                 extra.classList.add("extra")
-                extra.innerHTML = `<b>${buildData.content.stats.meta.Race} ${buildData.content.stats.meta.Oath}</b>`
+                extra.innerHTML = `<b style="font-weight: 600;">${buildData.content.stats.meta.Race} ${buildData.content.stats.meta.Oath}</b>`
+
+                let extra3 = document.createElement("span")
+                extra3.classList.add("extra")
+                extra3.innerHTML = `<b style="font-weight: 600;font-style:normal;font-size:10px;">
+                VIT ${buildData.content.stats.traits.Vitality} 
+                ERU ${buildData.content.stats.traits.Erudition} 
+                PRO ${buildData.content.stats.traits.Proficiency} 
+                SNG ${buildData.content.stats.traits.Songchant}</b>`
 
                 div.appendChild(extra)
+                div.appendChild(extra3)
 
                 let extra2 = document.createElement("span")
                 extra2.classList.add("extra")
@@ -421,9 +462,7 @@ function loadBuilds() {
                 mode = "normal"
 
                 if (index == data.length && mode == "normal") {
-                    buildTable.innerHTML += `
-                            <span onclick="showBuildPopup()" class="addBuild" id="addBuild"><i class="fa-solid fa-plus"></i> Add new build</span>
-                            `
+                    buildAdd.style.display = ``
                 }
                 if (mode != "normal") {
                     const btn = document.getElementById(`${mode}btn`)
@@ -515,10 +554,12 @@ function showBuildPopup() {
     buildName.placeholder = funnies[Math.ceil(Math.random() * funnies.length - 1)]
     popup.style.display = `flex`
     buildTable.style.pointerEvents = `none`
+    document.getElementById("buttons").style.pointerEvents = `none`
 }
 function closePopup() {
     popup.style.display = `none`
     buildTable.style.pointerEvents = `all`
+    document.getElementById("buttons").style.pointerEvents = `all`
 }
 
 function load() {
