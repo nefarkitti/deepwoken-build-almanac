@@ -182,7 +182,9 @@ function loadBuilds() {
                     "Shared Demise",
                     "Another Man's Trash",
                     "Audacity",
-                    "Command: Live"
+                    "Command: Live",
+                    "Alloyblood",
+                    "Reshape and Remold"
                 ]
                 console.log("TALENTS")
                 console.log(buildData.content.talents)
