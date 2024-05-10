@@ -7,6 +7,7 @@ let pinned = [
 const buildTable = document.getElementById("buildTable")
 const popup = document.getElementById("reset-popup")
 const error = document.getElementById("errorText")
+const statistics = document.getElementById("statistics")
 
 const buildName = document.getElementById("buildName")
 const buildLink = document.getElementById("buildLink")
@@ -138,8 +139,17 @@ function handleBuildClick(id) {
     }
 }
 
+let storeStat = ["Strength", "Fortitude", "Agility", "Intelligence", "Willpower", "Charisma"]
+let shorthand = ["STR", "FTD", "AGL", "INT", "WLL", "CHR"]
+let store = ["Thundercall", "Frostdraw", "Flamecharm", "Ironsing", "Shadowcast", "Galebreathe"]
+let elmShorthand = ["LTN", "ICE", "FLM", "IRN", "SDW", "WND"]
+let storeWPN = ["Heavy Wep.", "Medium Wep.", "Light Wep."]
+let wpnShorthand = ["HVY", "MED", "LHT"]
+let oaths = ["Arcwarder", "Blindseer", "Contractor", "Dawnwalker", "Fadetrimmer", "Jetstriker", "Linkstrider", "Oathless", "Saltchemist", "Silentheart", "Starkindred", "Visionshaper"]
+
 function loadBuilds() {
     buildTable.innerHTML = `<div class="loading"><img src="loading.png"></div>`
+    statistics.innerHTML = ``
 
     let index = 0
 
@@ -154,6 +164,39 @@ function loadBuilds() {
         mode = "normal"
         modeHandle("normal")
         return 0
+    }
+
+    let storeAvgStats = {
+        "Heavy Wep.": 0,
+        "Medium Wep.": 0,
+        "Light Wep.": 0,
+
+        "Strength": 0,
+        "Fortitude": 0,
+        "Agility": 0,
+        "Intelligence": 0,
+        "Willpower": 0,
+        "Charisma": 0,
+
+        "Flamecharm": 0,
+        "Frostdraw": 0,
+        "Thundercall": 0,
+        "Galebreathe": 0,
+        "Shadowcast": 0,
+        "Ironsing": 0,
+
+        "Arcwarder": 0,
+        "Blindseer": 0,
+        "Contractor": 0,
+        "Dawnwalker": 0,
+        "Fadetrimmer": 0,
+        "Jetstriker": 0,
+        "Linkstrider": 0,
+        "Oathless": 0,
+        "Saltchemist": 0,
+        "Silentheart": 0,
+        "Starkindred": 0,
+        "Visionshaper": 0
     }
 
     function createBuild(build) {
@@ -172,6 +215,8 @@ function loadBuilds() {
                 const buildData = xhr.response;
                 console.log(build.name.toUpperCase())
                 console.log(buildData);
+
+                storeAvgStats[buildData.content.stats.meta.Oath] += 1
 
                 const div = document.createElement("div")
                 div.id = `build-${build.url}`
@@ -200,22 +245,22 @@ function loadBuilds() {
                 let tags = document.createElement("div")
                 tags.classList.add("tags")
 
-                let storeStat = ["Strength", "Fortitude", "Agility", "Intelligence", "Willpower", "Charisma"]
-                let shorthand = ["STR", "FTD", "AGL", "INT", "WLL", "CHR"]
-                let store = ["Thundercall", "Frostdraw", "Flamecharm", "Ironsing", "Shadowcast", "Galebreathe"]
-                let elmShorthand = ["LTN", "ICE", "FLM", "IRN", "SDW", "WND"]
-                let storeWPN = ["Heavy Wep.", "Medium Wep.", "Light Wep."]
-                let wpnShorthand = ["HVY", "MED", "LHT"]
                 let stats = []
                 let attunements = []
                 let weapons = []
 
                 store.forEach(attunement => {
+
+                    storeAvgStats[attunement] += buildData.content.attributes.attunement[attunement]
+
                     if (buildData.content.attributes.attunement[attunement] >= 1) {
                         attunements.push(attunement)
                     }
                 })
                 storeWPN.forEach(weapon => {
+
+                    storeAvgStats[weapon] += buildData.content.attributes.weapon[weapon]
+
                     if (buildData.content.attributes.weapon[weapon] >= 1) {
                         weapons.push(weapon)
                     }
@@ -246,12 +291,63 @@ function loadBuilds() {
                 }
 
                 stats.forEach(stat => {
+
+                    storeAvgStats[stat.name] += stat.value
+
+                    //why doesnt this work??
+                    //storeAvgStats[stat.name] = storeAvgStats[stat.name] + stat.value
                     if (stat.value >= 75) {
                         let short = shorthand[storeStat.indexOf(stat.name)]
                         tags.innerHTML += `<span class="${stat.name.toLowerCase()}">${short}</span>`
                         console.log(stat.name)
                     }
+
                 })
+
+                statistics.innerHTML = ``
+                for (let i = 0; i < storeWPN.length; i++) {
+                    const sp = document.createElement("span")
+                    sp.classList.add("statline")
+
+                    sp.innerHTML += `<span>avg. ${storeWPN[i].toUpperCase()}:</span><span>${Math.ceil(storeAvgStats[storeWPN[i]] / data.length)}</span>`
+
+                    statistics.appendChild(sp)
+                }
+                statistics.innerHTML += `<br>`
+                for (let i = 0; i < storeStat.length; i++) {
+                    const sp = document.createElement("span")
+                    sp.classList.add("statline")
+
+                    sp.innerHTML += `<span>avg. ${storeStat[i].toUpperCase()}:</span><span>${Math.ceil(storeAvgStats[storeStat[i]] / data.length)}</span>`
+
+                    statistics.appendChild(sp)
+                }
+                statistics.innerHTML += `<br>`
+                for (let i = 0; i < store.length; i++) {
+                    const sp = document.createElement("span")
+                    sp.classList.add("statline")
+
+                    sp.innerHTML += `<span>avg. ${store[i].toUpperCase()}:</span><span>${Math.ceil(storeAvgStats[store[i]] / data.length)}</span>`
+
+                    statistics.appendChild(sp)
+                }
+                statistics.innerHTML += `<br>`
+                let mostUsedOath = ""
+                let last = 0
+                for (let i = 0; i < oaths.length; i++) {
+                    let oath = oaths[i];
+                    if (storeAvgStats[oath] >= last) {
+                        mostUsedOath = oath
+                        last = storeAvgStats[oath]
+                    }
+                }
+                statistics.innerHTML += `
+                <span class="statline">
+                <span>Main Oath:</span><span>${mostUsedOath} (${Math.ceil((last / data.length) *100)}%)</span>
+                </span>
+                `
+
+                statistics.innerHTML += `<span style="font-size: 10px;filter: opacity(40%);">* across all builds</span>`
 
                 let legendaryTalents = [
                     "Neural Overload",
@@ -347,7 +443,6 @@ function loadBuilds() {
         createBuild(build)
 
     })
-
 }
 
 function addBuild() {

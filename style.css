@@ -732,6 +732,19 @@ span.talent {
 .modebtn.selected {
     background-color: #252e2c;
 }
+
+.statistics {
+    font-family: 'Roboto', sans-serif;
+    margin-top: 10px;
+    font-weight: 100 !important;
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+}
+.statline {
+    display: flex;
+    justify-content: space-between;
+}
  
 @media screen and (max-width:1250px) {
     body {
