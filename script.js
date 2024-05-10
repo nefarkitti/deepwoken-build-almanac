@@ -1,6 +1,7 @@
 
 let data = [
-    
+]
+let pinned = [
 ]
 
 const buildTable = document.getElementById("buildTable")
@@ -9,7 +10,6 @@ const error = document.getElementById("errorText")
 
 const buildName = document.getElementById("buildName")
 const buildLink = document.getElementById("buildLink")
-const modebtn = document.getElementById("modebtn")
 
 buildTable.innerHTML = `<div class="loading"><img src="loading.png"></div>`
 
@@ -32,45 +32,108 @@ function loadBuild(id) {
 }
 
 let mode = "normal"
-modebtn.innerHTML = `<i class="fa-solid fa-trash-can"></i>`
+let modes = ["delete"/*, "pin"*/]
 
-function modeChange() {
-    if (mode == "normal") {
-        mode = "delete"
-        modebtn.classList.add("selected")
-        document.getElementById("addBuild").style.display = `none`
-        document.querySelectorAll(".build").forEach(element=> {
-            element.style.backgroundColor = `rgba(255, 122, 122, 0.3)`
+function applyMode(m) {
+
+    const add = document.getElementById("addBuild")
+    modes.forEach(item => {
+        console.log(item)
+        document.getElementById(`${item}btn`).style.backgroundColor = `#40504C`
+    })
+
+    if (m == "normal") {
+        document.querySelectorAll(".build").forEach(build => {
+            build.style.background = `none`
         })
+        add.style.display = ``
     } else {
-        mode = "normal"
-        modebtn.classList.remove("selected")
-        document.getElementById("addBuild").style.display = ``
-        document.querySelectorAll(".build").forEach(element=> {
-            element.style.backgroundColor = ``
-        })
+        const btn = document.getElementById(`${mode}btn`)
+        btn.style.backgroundColor = `#2C3835`
+        if (m == "delete") {
+            document.querySelectorAll(".build").forEach(build => {
+                build.style.background = `rgba(255, 127, 127, 0.4)`
+            })
+            add.style.display = `none`
+        } else if (m == "pin") {
+            document.querySelectorAll(".build").forEach(build => {
+                build.style.background = `rgba(127, 255, 255, 0.4)`
+            })
+            add.style.display = `none`
+        }
     }
+
 }
+
+function modeHandle(m) {
+
+    if (data.length <= 0) return
+
+    if (mode == "normal") {
+        mode = m
+        console.log(`CURRENT MODE: ${mode}`)
+        applyMode(mode)
+        return
+    }
+    if (mode == m) {
+        mode = "normal"
+        console.log(`CURRENT MODE: ${mode}`)
+        applyMode(mode)
+        return
+    }
+    if (mode != m) {
+        mode = m
+        console.log(`CURRENT MODE: ${mode}`)
+        applyMode(mode)
+        return
+    }
+
+}
+
+document.querySelectorAll(".upperbtn").forEach(btn => {
+
+    btn.setAttribute("onclick", `modeHandle("${btn.dataset.mode}")`)
+
+})
 
 function handleBuildClick(id) {
     if (mode == "normal") {
         window.open(`https://deepwoken.co/builder?id=${id}`, '_blank')
     } else {
-        //delete build
-        let buildElement = document.getElementById(`build-${id}`)
-        let foundSame = false
-        let foundBuild
-        data.forEach(build => {
-            if (build.url == id) {
-                foundBuild = build
-                foundSame = true
-                data.splice(data.indexOf(foundBuild), 1)
-                buildElement.remove()
-                save()
-                loadBuilds()
-                return
-            }
-        })
+        if (mode == "delete") {
+            //delete build
+            let buildElement = document.getElementById(`build-${id}`)
+            let foundSame = false
+            let foundBuild
+            data.forEach(build => {
+                if (build.url == id) {
+                    foundBuild = build
+                    foundSame = true
+                    data.splice(data.indexOf(foundBuild), 1)
+                    buildElement.remove()
+                    save()
+                    loadBuilds()
+                    return
+                }
+            })
+        } else if (mode == "pin") {
+            // pin build
+            let buildElement = document.getElementById(`build-${id}`)
+            let foundSame = false
+            let foundBuild
+            data.forEach(build => {
+                if (build.url == id) {
+                    foundBuild = build
+                    foundSame = true
+                    pinned.push(foundBuild)
+                    data.splice(data.indexOf(foundBuild), 1)
+                    buildElement.remove()
+                    save()
+                    loadBuilds()
+                    return
+                }
+            })
+        }
 
     }
 }
@@ -80,12 +143,20 @@ function loadBuilds() {
 
     let index = 0
 
+    modes.forEach(item => {
+        console.log(item)
+        document.getElementById(`${item}btn`).style.backgroundColor = `#40504C`
+    })
+
     if (data.length <= 0) {
         console.log("no builds to load!")
-        buildTable.innerHTML = `<span onclick="showBuildPopup()" class="addBuild"><i class="fa-solid fa-plus"></i> Add new build</span>`
+        buildTable.innerHTML = `<span onclick="showBuildPopup()" class="addBuild" id="addBuild"><i class="fa-solid fa-plus"></i> Add new build</span>`
+        mode = "normal"
+        modeHandle("normal")
         return 0
     }
-    data.forEach(build => {
+
+    function createBuild(build) {
 
         const xhr = new XMLHttpRequest();
         xhr.open("GET", `https://api.deepwoken.co/build?id=${build.url}`); //MNYlcSP8
@@ -99,6 +170,7 @@ function loadBuilds() {
                 }
 
                 const buildData = xhr.response;
+                console.log(build.name.toUpperCase())
                 console.log(buildData);
 
                 const div = document.createElement("div")
@@ -108,7 +180,7 @@ function loadBuilds() {
                 // i love webjs!
                 div.setAttribute("onclick", `handleBuildClick("${build.url}")`)
                 div.title = buildData.content.stats.buildName
-        
+
                 const span = document.createElement("span")
                 span.classList.add("build-name")
                 if (buildData.content.preShrine) {
@@ -127,7 +199,7 @@ function loadBuilds() {
 
                 let tags = document.createElement("div")
                 tags.classList.add("tags")
-                
+
                 let storeStat = ["Strength", "Fortitude", "Agility", "Intelligence", "Willpower", "Charisma"]
                 let shorthand = ["STR", "FTD", "AGL", "INT", "WLL", "CHR"]
                 let store = ["Thundercall", "Frostdraw", "Flamecharm", "Ironsing", "Shadowcast", "Galebreathe"]
@@ -139,7 +211,7 @@ function loadBuilds() {
                 let weapons = []
 
                 store.forEach(attunement => {
-                    if (buildData.content.attributes.attunement[attunement] >= 1){
+                    if (buildData.content.attributes.attunement[attunement] >= 1) {
                         attunements.push(attunement)
                     }
                 })
@@ -172,7 +244,7 @@ function loadBuilds() {
                         tags.innerHTML += `<span class="weapon">${wpnShorthand[storeWPN.indexOf(weapon)]}</span>`
                     })
                 }
-                
+
                 stats.forEach(stat => {
                     if (stat.value >= 75) {
                         let short = shorthand[storeStat.indexOf(stat.name)]
@@ -222,7 +294,7 @@ function loadBuilds() {
                 let extra = document.createElement("span")
                 extra.classList.add("extra")
                 extra.innerHTML = `<b>${buildData.content.stats.meta.Race} ${buildData.content.stats.meta.Oath}</b>`
-        
+
                 div.appendChild(extra)
 
                 let extra2 = document.createElement("span")
@@ -237,20 +309,30 @@ function loadBuilds() {
                 div.appendChild(extra2)
 
                 buildTable.appendChild(div)
-                index ++
-/*
-                setTimeout(() => {
-                    document.getElementById(`build-${build.url}`).onclick = function() {
-                        console.log("hisds")
-                        window.open(`https://deepwoken.co/builder?id=${build.url}`, '_blank')
-                    }
-                }, 100 * index)*/
+                index++
 
+                mode = "normal"
 
                 if (index == data.length && mode == "normal") {
                     buildTable.innerHTML += `
-                    <span onclick="showBuildPopup()" class="addBuild" id="addBuild"><i class="fa-solid fa-plus"></i> Add new build</span>
-                    `
+                            <span onclick="showBuildPopup()" class="addBuild" id="addBuild"><i class="fa-solid fa-plus"></i> Add new build</span>
+                            `
+                }
+                if (mode != "normal") {
+                    const btn = document.getElementById(`${mode}btn`)
+                    btn.style.backgroundColor = `#2C3835`
+                }
+                if (mode == "delete") {
+                    document.querySelectorAll(".build").forEach(build => {
+                        build.style.background = `rgba(255, 127, 127, 0.4)`
+                    })
+                    document.getElementById("addBuild").style.display = `none`
+                }
+                if (mode == "pin") {
+                    document.querySelectorAll(".build").forEach(build => {
+                        build.style.background = `rgba(127, 255, 255, 0.4)`
+                    })
+                    document.getElementById("addBuild").style.display = `none`
                 }
 
             } else {
@@ -258,6 +340,11 @@ function loadBuilds() {
                 return "ERROR"
             }
         }
+    }
+
+    data.forEach(build => {
+
+        createBuild(build)
 
     })
 
@@ -299,14 +386,14 @@ function addBuild() {
 }
 
 const funnies = [
-    "Top Chime Silentheart Deto Petra's", 
-    "Best PvE", "Godseeker Shadow Crypt", 
-    "Blindseer LFT", 
-    "Railblade Edenkite Silentheart", 
-    "Markor’s Inheritor Blademaster", 
-    "Dawnwalker Gale", 
-    "El Primo Legion Kata", 
-    "Evanspear Chilling", 
+    "Top Chime Silentheart Deto Petra's",
+    "Best PvE", "Godseeker Shadow Crypt",
+    "Blindseer LFT",
+    "Railblade Edenkite Silentheart",
+    "Markor’s Inheritor Blademaster",
+    "Dawnwalker Gale",
+    "El Primo Legion Kata",
+    "Evanspear Chilling",
     "Frostdraw Stilleto",
     "Duke cosplay",
     "Ferryman cosplay",
@@ -319,7 +406,7 @@ const funnies = [
 function showBuildPopup() {
     buildLink.value = ""
     buildName.value = ""
-    buildName.placeholder = funnies[Math.ceil(Math.random() * funnies.length-1)]
+    buildName.placeholder = funnies[Math.ceil(Math.random() * funnies.length - 1)]
     popup.style.display = `flex`
     buildTable.style.pointerEvents = `none`
 }
@@ -330,9 +417,11 @@ function closePopup() {
 
 function load() {
     const getSave = localStorage.getItem("builds");
+    const getPinned = localStorage.getItem("pinnedbuilds")
     try {
-        if (getSave != null) {
+        if (getSave != null && getPinned != null) {
             data = JSON.parse(getSave)
+            pinned = JSON.parse(getPinned)
         }
 
         // load pages based on provided data
@@ -344,7 +433,9 @@ function load() {
 }
 function save() {
     data = data
+    pinned = pinned
     localStorage.setItem("builds", JSON.stringify(data))
+    localStorage.setItem("pinnedbuilds", JSON.stringify(pinned))
 }
 
 //save()
