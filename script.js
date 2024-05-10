@@ -46,7 +46,7 @@ function modeChange() {
 
 function handleBuildClick(id) {
     if (mode == "normal") {
-        window.open("https://deepwoken.co/builder?id=${build.url}", '_blank')
+        window.open(`https://deepwoken.co/builder?id=${id}`, '_blank')
     } else {
         //delete build
         let buildElement = document.getElementById(`build-${id}`)
