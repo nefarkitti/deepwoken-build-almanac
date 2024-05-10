@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepwoken Build Almanac</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="favicon.png">
+    <script src="script.js" defer></script>
+    <script src="https://kit.fontawesome.com/d250854114.js" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta property="og:title" content="Deepwoken Echo Checklist">
+    <meta property="og:description" content="A way to store all of your Deepwoken Builder links.">
+    <meta property="og:url" content="https://nefarkitti.github.io/deepwoken-build-almanac/">
+    <meta property="og:type" content="website">
+    <meta name="description" content="A way to store all of your Deepwoken Builder links.">
+    <meta name="author" content="nefarkitti">
+    <meta property="og:image" content="https://nefarkitti.github.io/deepwoken-build-almanac/favicon.png">
+    <meta property="og:image:type" content="image/png">
+</head>
+<body>
+    <div class="bg">
+        <div class="thing"><img src="favicon.png" width="75" height="75" alt="" style="image-rendering: pixelated;"><br>v1</div>
+    </div>
+    <truecenter class="alt">
+        <div class="main-left">
+            <div class="modifiers" style="width: 10rem;">
+                <div class="title">Info</div>
+                <p class="left-content">
+
+                    stat tags are applied if the stat is >=75
+                    <br>
+                    it also shows all legendary cards to get an idea of what it is
+                    <br><br>
+                    why doesn't the builder have this already
+
+                </p>
+            </div>
+        </div>
+        <div class="main">
+            <div class="actualthing">
+                <div class="title">Almanac</div>
+                <div class="subtitle">Gallery</div>
+                <div class="checklist" style="user-select: none;">
+                    <div id="buildTable">
+                        
+                    </div> 
+                </div>
+                <br>
+            </div>
+            <div class="misc-info">I want to clarify that the border and background images used for this are taken from the <a href="https://deepwoken.co/builder">Deepwoken Build Maker</a> made by <a>Cyfer#2380</a>, all credit for those to them.</div>
+        </div>
+        <br>
+    </truecenter>
+    <truecenter class="popup">
+        <div class="reset-popup" id="reset-popup" style="display: none">
+            <div class="reset-popup-title">Add new build</div>
+            <span class="reset-contents">
+                <div>
+                    <label for="buildName">Build Name:</label>
+                    <input type="text" name="buildName" id="buildName">
+                </div>
+                <div>
+                    <label for="buildLink">Builder Link:</label>
+                    <input type="text" name="buildLink" id="buildLink" placeholder="https://deepwoken.co/builder?id=">
+                </div>
+            </span>
+            <span id="errorText" style="margin-bottom: 10px"></span>
+            <div class="betterButtonHolder">
+                <span class="buttonstylized" onclick="addBuild()">Add</span>
+                <span class="buttonstylized" onclick="closePopup()">Cancel</span>
+            </div>
+        </div>
+    </truecenter>
+</body>
+</html>
