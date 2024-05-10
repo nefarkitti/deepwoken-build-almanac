@@ -250,12 +250,8 @@ function loadBuilds() {
                 let weapons = []
 
                 store.forEach(attunement => {
-
-                    if (buildData.content.preShrine) {
-                        storeAvgStats[attunement] += buildData.content.preShrine.attunement[attunement]
-                    } else {
-                        storeAvgStats[attunement] += buildData.content.attributes.attunement[attunement]
-                    }
+                    
+                    storeAvgStats[attunement] += buildData.content.attributes.attunement[attunement]
 
                     console.log(buildData.content.preShrine.attunement[attunement])
                     if (buildData.content.attributes.attunement[attunement] >= 1 || buildData.content.preShrine.attunement[attunement] >= 1) {
