@@ -718,6 +718,20 @@ span.talent {
     background-color: rgb(29, 29, 29);
     color: white;
 }
+
+.modebtn {
+    padding: 0;
+    width: min-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 5px 0px;
+    padding-right: 10px;
+}
+.modebtn.selected {
+    background-color: #252e2c;
+}
  
 @media screen and (max-width:1250px) {
     body {

@@ -32,19 +32,19 @@ function loadBuild(id) {
 }
 
 let mode = "normal"
-modebtn.innerHTML = `delete mode`
+modebtn.innerHTML = `<i class="fa-solid fa-trash-can"></i>`
 
 function modeChange() {
     if (mode == "normal") {
         mode = "delete"
-        modebtn.innerHTML = `add mode`
+        modebtn.classList.add("selected")
         document.getElementById("addBuild").style.display = `none`
         document.querySelectorAll(".build").forEach(element=> {
             element.style.backgroundColor = `rgba(255, 122, 122, 0.3)`
         })
     } else {
-        modebtn.innerHTML = `delete mode`
         mode = "normal"
+        modebtn.classList.remove("selected")
         document.getElementById("addBuild").style.display = ``
         document.querySelectorAll(".build").forEach(element=> {
             element.style.backgroundColor = ``
