@@ -9,6 +9,7 @@ const error = document.getElementById("errorText")
 
 const buildName = document.getElementById("buildName")
 const buildLink = document.getElementById("buildLink")
+const modebtn = document.getElementById("modebtn")
 
 function loadBuild(id) {
 
@@ -25,6 +26,44 @@ function loadBuild(id) {
             console.log(`Error: ${xhr.status}`);
             return "ERROR"
         }
+    }
+}
+
+let mode = "normal"
+modebtn.innerHTML = `delete mode`
+
+function modeChange() {
+    if (mode == "normal") {
+        mode = "delete"
+        modebtn.innerHTML = `add mode`
+        document.getElementById("addBuild").style.display = `none`
+    } else {
+        modebtn.innerHTML = `delete mode`
+        mode = "normal"
+        document.getElementById("addBuild").style.display = ``
+    }
+}
+
+function handleBuildClick(id) {
+    if (mode == "normal") {
+        window.open("https://deepwoken.co/builder?id=${build.url}", '_blank')
+    } else {
+        //delete build
+        let buildElement = document.getElementById(`build-${id}`)
+        let foundSame = false
+        let foundBuild
+        data.forEach(build => {
+            if (build.url == id) {
+                foundBuild = build
+                foundSame = true
+                data.splice(data.indexOf(foundBuild), 1)
+                buildElement.remove()
+                save()
+                loadBuilds()
+                return
+            }
+        })
+
     }
 }
 
@@ -59,7 +98,7 @@ function loadBuilds() {
                 div.classList.add("build")
 
                 // i love webjs!
-                div.setAttribute("onclick", `window.open("https://deepwoken.co/builder?id=${build.url}", '_blank')`)
+                div.setAttribute("onclick", `handleBuildClick("${build.url}")`)
                 div.title = buildData.content.stats.buildName
         
                 const span = document.createElement("span")
@@ -185,7 +224,7 @@ function loadBuilds() {
 
                 if (index == data.length) {
                     buildTable.innerHTML += `
-                    <span onclick="showBuildPopup()" class="addBuild"><i class="fa-solid fa-plus"></i> Add new build</span>
+                    <span onclick="showBuildPopup()" class="addBuild" id="addBuild"><i class="fa-solid fa-plus"></i> Add new build</span>
                     `
                 }
 
@@ -211,9 +250,21 @@ function addBuild() {
 
     console.log(`adding build ${url.searchParams.get("id")}`)
 
+    let id = url.searchParams.get("id")
+
+    let foundSame = false
+    data.forEach(build => {
+        if (build.url == id) {
+            foundSame = true
+            return
+        }
+    })
+
+    if (foundSame == true) return;
+
     data.push({
         "name": name,
-        "url": url.searchParams.get("id")
+        "url": id
     })
 
     closePopup()
