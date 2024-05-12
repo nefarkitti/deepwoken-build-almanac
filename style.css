@@ -428,6 +428,7 @@ truecenter {
     text-align: left !important;
     text-indent: 0;
     padding: 0px 10px;
+    font-weight: 600;
 }
 .addBuild.reset-btn i {
     margin-right: 5px;
@@ -577,7 +578,7 @@ truecenter {
     background-color: #2C3835;
 }
 
-#buildTable {
+.buildsTable {
     display: flex;
     padding: 5px;
     font-family: 'Roboto', sans-serif;
@@ -585,7 +586,7 @@ truecenter {
     align-items: flex-start;
     flex-wrap: wrap;
 }
-#buildTable div:not(.loading,.tags),.addBuild {
+.buildsTable div:not(.loading,.tags),.addBuild {
     width: calc(50% - 5px);
     text-align: left;
     color: #575757;
@@ -593,16 +594,18 @@ truecenter {
     margin: 2px;
     padding: 5px;
     box-sizing: border-box;
+    border-radius: 5px;
 }
-#buildTable div:not(.loading,.tags):hover,.addBuild:hover {
+.buildsTable div:not(.loading,.tags):hover,.addBuild:hover {
     cursor: pointer;
     color: black;
     border-bottom: 2px solid black;
+    background-color: rgba(0, 0, 0, 0.043);
 }
-#buildTable div:not(.loading,.tags):hover img {
+.buildsTable div:not(.loading,.tags):hover img {
     filter: brightness(110%) opacity(100%);
 }
-#buildTable div:not(.loading,.tags):hover span {
+.buildsTable div:not(.loading,.tags):hover span {
     filter: opacity(100%);
 }
 .build {
@@ -631,6 +634,19 @@ truecenter {
     animation-duration: 0.4s;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
+}
+#line {
+    width: 50%;
+    filter: opacity(25%);
+}
+.betterButtonHolder .buttonstylized {
+    margin: 0px 10px; 
+}
+.build .fa-thumbtack {
+    transform: rotate(45deg) translate(2px, -2px);
+}
+.fa-torii-gate {
+    margin-left: 2px;
 }
 
 @keyframes spinner {
@@ -695,7 +711,7 @@ textarea:focus, input:focus{
 .tags img {
     width: 20px;
     margin: 2px;
-    filter: brightness(110%) opacity(75%);
+    filter: brightness(100%) opacity(75%);
 }
 .tags span {
     font-size: 9px;
@@ -770,7 +786,13 @@ span.talent {
     display: flex;
     justify-content: space-between;
 }
- 
+
+#currentmode {
+    font-family: 'Roboto', sans-serif;
+    text-shadow: none;
+    font-size: 18px;
+}
+
 @media screen and (max-width:1250px) {
     body {
         overflow-x: hidden !important;

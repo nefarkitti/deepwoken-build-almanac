@@ -21,7 +21,7 @@
 </head>
 <body>
     <div class="bg">
-        <div class="thing"><img src="favicon.png" width="75" height="75" alt="" style="image-rendering: pixelated;"><br>v2</div>
+        <div class="thing"><img src="favicon.png" width="75" height="75" alt="" style="image-rendering: pixelated;"><br>v2.1</div>
     </div>
     <truecenter class="alt">
         <div class="main-left">
@@ -31,7 +31,7 @@
 
                     stat tags are applied if the stat is >=75
                     <br>
-                    it also shows all legendary cards to get an idea of what it is
+                    it also shows all legendary cards to get the general gist of a build
                     <br><br>
                     why doesn't the builder have this already
 
@@ -42,17 +42,25 @@
             <div class="actualthing">
                 <div class="title">Almanac</div>
                 <div class="subtitle">
-                    Gallery
+                    <b style="font-weight: 200;">Gallery</b>
+                    <span id="currentmode">current mode</span>
                     <b id="buttons">
                         <span class="reset-btn modebtn upperbtn" data-mode="delete" id="deletebtn"><i class="fa-solid fa-trash-can"></i></span> 
-                    <!--<span class="reset-btn modebtn upperbtn" id="pinbtn" data-mode="pin"><i class="fa-solid fa-thumbtack"></i></span>-->
+                        <span class="reset-btn modebtn upperbtn" id="editbtn" data-mode="edit"><i class="fa-solid fa-pencil"></i></span>
+                    <span class="reset-btn modebtn upperbtn" id="pinbtn" data-mode="pin"><i class="fa-solid fa-thumbtack"></i></span>
                         <span onclick="showBuildPopup()" class="addBuild reset-btn" id="addBuild"><i class="fa-solid fa-plus"></i> <span>Add new build</span></span>
                     </b>
                 </div>
                 <div class="checklist" style="user-select: none;">
-                    <div id="buildTable">
+                    <div>
+                        <div id="pinnedTable" class="buildsTable">
+
+                        </div>
+                        <hr id="line">
+                        <div id="buildTable" class="buildsTable">
                         
-                    </div> 
+                        </div> 
+                    </div>
                 </div>
                 <br>
             </div>
@@ -85,6 +93,22 @@
             <span id="errorText" style="margin-bottom: 10px"></span>
             <div class="betterButtonHolder">
                 <span class="buttonstylized" onclick="addBuild()">Add</span>
+                <span class="buttonstylized" onclick="closePopup()">Cancel</span>
+            </div>
+        </div>
+
+        <div class="reset-popup" id="edit-popup" style="display: none">
+            <div class="reset-popup-title">Edit Build</div>
+            <span class="reset-contents">
+                <div>
+                    <label for="buildName">Build Name:</label>
+                    <input type="text" name="buildName" id="editbuildName">
+                </div>
+            </span>
+            <span id="errorText" style="margin-bottom: 10px"></span>
+            <div class="betterButtonHolder">
+                <span class="buttonstylized" onclick="saveEdit()">Save</span>
+                <span class="buttonstylized" onclick="unPin()" id="pinner">Unpin</span>
                 <span class="buttonstylized" onclick="closePopup()">Cancel</span>
             </div>
         </div>

@@ -5,15 +5,23 @@ let pinned = [
 ]
 
 const buildTable = document.getElementById("buildTable")
+const pinnedTable = document.getElementById("pinnedTable")
 const popup = document.getElementById("reset-popup")
+const editpopup = document.getElementById("edit-popup")
 const error = document.getElementById("errorText")
 const statistics = document.getElementById("statistics")
+const currentmode = document.getElementById("currentmode")
+const buttons = document.getElementById("buttons")
+const line = document.getElementById("line")
 
 const buildName = document.getElementById("buildName")
 const buildLink = document.getElementById("buildLink")
 const buildAdd = document.getElementById("addBuild")
 
+let EDITING
+
 buildTable.innerHTML = `<div class="loading"><img src="loading.png"></div>`
+line.style.display = `none`
 
 function loadBuild(id) {
 
@@ -33,10 +41,16 @@ function loadBuild(id) {
     }
 }
 
+currentmode.innerHTML = ``
+buttons.style.display = `none`
+pinnedTable.style.display = `none`
+
 let mode = "normal"
-let modes = ["delete"/*, "pin"*/]
+let modes = ["delete", "pin", "edit"]
 
 function applyMode(m) {
+
+    currentmode.innerHTML = ``
 
     const add = document.getElementById("addBuild")
     modes.forEach(item => {
@@ -50,6 +64,7 @@ function applyMode(m) {
         })
         add.style.display = ``
     } else {
+        currentmode.innerHTML = `${m} mode`
         const btn = document.getElementById(`${mode}btn`)
         btn.style.backgroundColor = `#2C3835`
         if (m == "delete") {
@@ -60,6 +75,11 @@ function applyMode(m) {
         } else if (m == "pin") {
             document.querySelectorAll(".build").forEach(build => {
                 build.style.background = `rgba(127, 255, 255, 0.4)`
+            })
+            add.style.display = `none`
+        } else if (m == "edit") {
+            document.querySelectorAll(".build").forEach(build => {
+                build.style.background = `rgba(255, 127, 255, 0.4)`
             })
             add.style.display = `none`
         }
@@ -99,28 +119,42 @@ document.querySelectorAll(".upperbtn").forEach(btn => {
 })
 
 function handleBuildClick(id) {
+
+    let buildElement = document.getElementById(`build-${id}`)
     if (mode == "normal") {
         window.open(`https://deepwoken.co/builder?id=${id}`, '_blank')
     } else {
         if (mode == "delete") {
             //delete build
-            let buildElement = document.getElementById(`build-${id}`)
             let foundSame = false
             let foundBuild
-            data.forEach(build => {
-                if (build.url == id) {
-                    foundBuild = build
-                    foundSame = true
-                    data.splice(data.indexOf(foundBuild), 1)
-                    buildElement.remove()
-                    save()
-                    loadBuilds()
-                    return
-                }
-            })
+            if (buildElement.dataset.pinned == 1) {
+                pinned.forEach(build => {
+                    if (build.url == id) {
+                        foundBuild = build
+                        foundSame = true
+                        pinned.splice(pinned.indexOf(foundBuild), 1)
+                        buildElement.remove()
+                        save()
+                        loadBuilds()
+                        return
+                    }
+                })
+            } else {
+                data.forEach(build => {
+                    if (build.url == id) {
+                        foundBuild = build
+                        foundSame = true
+                        data.splice(data.indexOf(foundBuild), 1)
+                        buildElement.remove()
+                        save()
+                        loadBuilds()
+                        return
+                    }
+                })
+            }
         } else if (mode == "pin") {
             // pin build
-            let buildElement = document.getElementById(`build-${id}`)
             let foundSame = false
             let foundBuild
             data.forEach(build => {
@@ -135,6 +169,28 @@ function handleBuildClick(id) {
                     return
                 }
             })
+        } else if (mode == "edit") {
+            let buildData
+            let pin = false
+            if (buildElement.dataset.pinned == 1) {
+                pinned.forEach(build => {
+                    if (build.url == id) {
+                        buildData = build
+                        pin = true
+                        return
+                    }
+                })
+            } else {
+                data.forEach(build => {
+                    if (build.url == id) {
+                        buildData = build
+                        return
+                    }
+                })
+            }
+            if (buildData) {
+                showEditPopup(buildData, pin)
+            }
         }
 
     }
@@ -151,7 +207,12 @@ let races = ["Adret","Etrean","Vesperian","Canor","Capra","Celtor","Chrysid","Fe
 
 function loadBuilds() {
     buildTable.innerHTML = `<div class="loading"><img src="loading.png"></div>`
+    pinnedTable.innerHTML = ``
     statistics.innerHTML = ``
+    currentmode.innerHTML = ``
+    line.style.display =`none`
+    buildAdd.style.display = `none`
+    buttons.style.display = `none`
 
     let index = 0
 
@@ -215,7 +276,7 @@ function loadBuilds() {
         "Tiran": 0
     }
 
-    function createBuild(build) {
+    function createBuild(build, location) {
 
         const xhr = new XMLHttpRequest();
         xhr.open("GET", `https://api.deepwoken.co/build?id=${build.url}`); //MNYlcSP8
@@ -237,22 +298,30 @@ function loadBuilds() {
 
                 const div = document.createElement("div")
                 div.id = `build-${build.url}`
+                div.dataset.buildid = build.url
                 div.classList.add("build")
+                if (location == "pinned") {
+                    div.dataset.pinned = 1
+                }
 
                 // i love webjs!
                 div.setAttribute("onclick", `handleBuildClick("${build.url}")`)
-                div.setAttribute("onmousewheel", "console.log('hi')")
                 div.title = buildData.content.stats.buildName
+
+                let soo = document.createElement("b")
+                soo.style.overflow = `clip`
 
                 const span = document.createElement("span")
                 span.classList.add("build-name")
-                if (buildData.content.preShrine) {
-                    console.log("hi")
-                    let soo = document.createElement("b")
-                    soo.style.overflow = `clip`
-                    soo.innerHTML = `<i class='fa-solid fa-torii-gate'></i> `
-                    span.appendChild(soo)
+                if (location == "pinned") {
+                    console.log("hi there")
+                    soo.innerHTML += `<i class='fa-solid fa-thumbtack'></i> `
                 }
+                if (buildData.content.preShrine) {
+                    soo.innerHTML += `<i class='fa-solid fa-torii-gate'></i> `
+                }
+
+                span.appendChild(soo)
                 const bname = document.createElement("b")
                 bname.innerText = build.name
                 bname.style.marginLeft = `2px`
@@ -297,10 +366,10 @@ function loadBuilds() {
                 }
                 console.log(attunements)
                 if (attunements.length <= 0) {
-                    tags.innerHTML += `<img src="attunements/no-attunement.png">`
+                    tags.innerHTML += `<img src="attunements/no-attunement-better.png">`
                 } else {
                     attunements.forEach(attune => {
-                        tags.innerHTML += `<img src="attunements/${attune.toLowerCase()}.png">`
+                        tags.innerHTML += `<img src="attunements/${attune.toLowerCase()}-better.png">`
                     })
                 }
 
@@ -333,7 +402,7 @@ function loadBuilds() {
                     const sp = document.createElement("span")
                     sp.classList.add("statline")
 
-                    sp.innerHTML += `<span>avg. ${storeWPN[i].toUpperCase()}:</span><span>${Math.ceil(storeAvgStats[storeWPN[i]] / data.length)}</span>`
+                    sp.innerHTML += `<span>avg. ${storeWPN[i].toUpperCase()}:</span><span>${Math.ceil(storeAvgStats[storeWPN[i]] / (data.length + pinned.length))}</span>`
 
                     statistics.appendChild(sp)
                 }
@@ -342,7 +411,7 @@ function loadBuilds() {
                     const sp = document.createElement("span")
                     sp.classList.add("statline")
 
-                    sp.innerHTML += `<span>avg. ${storeStat[i].toUpperCase()}:</span><span>${Math.ceil(storeAvgStats[storeStat[i]] / data.length)}</span>`
+                    sp.innerHTML += `<span>avg. ${storeStat[i].toUpperCase()}:</span><span>${Math.ceil(storeAvgStats[storeStat[i]] / (data.length + pinned.length))}</span>`
 
                     statistics.appendChild(sp)
                 }
@@ -351,7 +420,7 @@ function loadBuilds() {
                     const sp = document.createElement("span")
                     sp.classList.add("statline")
 
-                    sp.innerHTML += `<span>avg. ${store[i].toUpperCase()}:</span><span>${Math.ceil(storeAvgStats[store[i]] / data.length)}</span>`
+                    sp.innerHTML += `<span>avg. ${store[i].toUpperCase()}:</span><span>${Math.ceil(storeAvgStats[store[i]] / (data.length + pinned.length))}</span>`
 
                     statistics.appendChild(sp)
                 }
@@ -367,7 +436,7 @@ function loadBuilds() {
                 }
                 statistics.innerHTML += `
                 <span class="statline">
-                <span>Main Oath:</span><span>${mostUsedOath} (${Math.ceil((last / data.length) *100)}%)</span>
+                <span>Main Oath:</span><span>${mostUsedOath} (${Math.ceil((last / (data.length + pinned.length)) *100)}%)</span>
                 </span>
                 `
                 let mostUsedRace = ""
@@ -381,7 +450,7 @@ function loadBuilds() {
                 }
                 statistics.innerHTML += `
                 <span class="statline">
-                <span>Main Race:</span><span>${mostUsedRace} (${Math.ceil((last / data.length) *100)}%)</span>
+                <span>Main Race:</span><span>${mostUsedRace} (${Math.ceil((last / (data.length + pinned.length)) *100)}%)</span>
                 </span>
                 `
 
@@ -452,13 +521,26 @@ function loadBuilds() {
 
                 div.appendChild(extra2)
 
-                buildTable.appendChild(div)
+                if (location == "pinned") {
+                    pinnedTable.appendChild(div)
+                } else {
+                    buildTable.appendChild(div)
+                }
                 index++
 
                 mode = "normal"
+                
+                line.style.display =`none`
+                if (pinned.length >= 1) {
+                    line.style.display = ``
+                } else {
+                    pinnedTable.style.display = `none`
+                    line.style.display =`none`
+                }
 
                 if (index == data.length && mode == "normal") {
                     buildAdd.style.display = ``
+                    buttons.style.display = ``
                 }
                 if (mode != "normal") {
                     const btn = document.getElementById(`${mode}btn`)
@@ -484,9 +566,19 @@ function loadBuilds() {
         }
     }
 
+    if (pinned.length >= 1) {
+        pinnedTable.style.display = ``
+
+        pinned.forEach(build => {
+
+            createBuild(build, "pinned")
+    
+        })
+    }
+
     data.forEach(build => {
 
-        createBuild(build)
+        createBuild(build, "build")
 
     })
 }
@@ -512,6 +604,12 @@ function addBuild() {
             return
         }
     })
+    pinned.forEach(build => {
+        if (build.url == id) {
+            foundSame = true
+            return
+        }
+    })
 
     if (foundSame == true) return;
 
@@ -529,7 +627,7 @@ function addBuild() {
 const funnies = [
     "Top Chime Silentheart Deto Petra's",
     "Best PvE", "Godseeker Shadow Crypt",
-    "Blindseer LFT",
+    "Blindseer Guns LFT",
     "Railblade Edenkite Silentheart",
     "Markor’s Inheritor Blademaster",
     "Dawnwalker Gale",
@@ -542,20 +640,74 @@ const funnies = [
     "Flame Shadow Hero Blade",
     "Bossraid Oni",
     "Silentheart Guns",
-    "Godseeker Thundercall Stormseye"
+    "Godseeker Thundercall Stormseye",
+    "Spear Jetstriker",
+    "Detonation Rapier",
+    "new top 50 build",
+    "IRONSING META",
+    "FLAMECHARM META",
+    "mantra spam #234",
+    "Frost Mage"
 ]
 function showBuildPopup() {
     buildLink.value = ""
     buildName.value = ""
+    buildLink.style.display = ``
     buildName.placeholder = funnies[Math.ceil(Math.random() * funnies.length - 1)]
     popup.style.display = `flex`
     buildTable.style.pointerEvents = `none`
     document.getElementById("buttons").style.pointerEvents = `none`
 }
+function showEditPopup(dat, pin) {
+    document.getElementById("pinner").style.display = `none`
+    if (pin == true) {
+        document.getElementById("pinner").style.display = ``
+    }
+    console.log(dat)
+    document.getElementById("editbuildName").value = dat.name
+    document.getElementById("editbuildName").placeholder = dat.name
+    editpopup.style.display = `flex`
+    buildTable.style.pointerEvents = `none`
+    document.getElementById("buttons").style.pointerEvents = `none`
+    EDITING = dat.url
+}
 function closePopup() {
     popup.style.display = `none`
+    editpopup.style.display = `none`
     buildTable.style.pointerEvents = `all`
     document.getElementById("buttons").style.pointerEvents = `all`
+}
+function saveEdit() {
+    if (document.getElementById("editbuildName").value.length < 3) return;
+    let buildData
+    data.forEach(build => {
+        if (build.url == EDITING) {
+            buildData = build
+            return
+        }
+    })
+    if (buildData) {
+        buildData.name = document.getElementById("editbuildName").value
+        closePopup()
+        save()
+        loadBuilds()
+    }
+}
+function unPin() {
+    let buildData
+    pinned.forEach(build => {
+        if (build.url == EDITING) {
+            buildData = build
+            return
+        }
+    })
+    if (buildData) {
+        data.push(buildData)
+        pinned.splice(pinned.indexOf(buildData), 1)
+        save()
+        closePopup()
+        loadBuilds()
+    }
 }
 
 function load() {
