@@ -358,6 +358,12 @@ function loadBuilds() {
                 console.log(build.name.toUpperCase())
                 console.log(buildData);
 
+                if (buildData.status == "failed") {
+                    createNotif(`Failed to load ${build.name}`)
+                    index ++
+                    return
+                }
+
                 storeAvgStats[buildData.content.stats.meta.Oath] += 1
                 storeAvgStats[buildData.content.stats.meta.Race] += 1
 
