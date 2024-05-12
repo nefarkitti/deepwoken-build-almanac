@@ -410,6 +410,13 @@ truecenter {
     justify-content: space-between;
     align-items: center;
 }
+.reset-popup .loading {
+    height: fit-content;
+}
+.reset-popup .loading img {
+    width: 25px;
+    height: 25px;
+}
 .addBuild.reset-btn {
     color: white;
     height: 25px;

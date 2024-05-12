@@ -707,6 +707,8 @@ function loadBuilds() {
     })
 }
 
+const addbtns = document.getElementById("addbuildbuttons")
+
 function addBuild() {
 
     const name = buildName.value
@@ -741,15 +743,30 @@ function addBuild() {
 
     if (foundSame == true) return;
 
-    /*data.push({
-        "name": name,
-        "url": id
-    })*/
+    addbtns.innerHTML = `<div class="loading"><img src="loading.png"></div><span>validating</span>`
 
-    closePopup()
-    save()
-
-    //loadBuilds()
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", `https://api.deepwoken.co/build?id=${id}`); //MNYlcSP8
+    xhr.send();
+    xhr.responseType = "json";
+    xhr.onload = () => {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            let buildData = xhr.response
+            if (buildData.status == "success") {
+                data.push({
+                    "name": name,
+                    "url": id
+                })
+                
+                closePopup()
+                save()
+                loadBuilds()
+            } else {
+                addbtns.innerHTML = `<span class="buttonstylized" onclick="addBuild()">Add</span>
+                <span class="buttonstylized" onclick="closePopup()">Cancel</span>`
+            }
+        }
+    }
 }
 
 const funnies = [
@@ -782,9 +799,13 @@ function showBuildPopup() {
     buildName.value = ""
     buildLink.style.display = ``
     buildName.placeholder = funnies[Math.ceil(Math.random() * funnies.length - 1)]
+    addbtns.innerHTML = `<span class="buttonstylized" onclick="addBuild()">Add</span>
+    <span class="buttonstylized" onclick="closePopup()">Cancel</span>`
     popup.style.display = `flex`
     buildTable.style.pointerEvents = `none`
     document.getElementById("buttons").style.pointerEvents = `none`
+    pinnedTable.style.pointerEvents = `none`
+    buildTable.style.pointerEvents = `none`
 }
 function showEditPopup(dat, pin) {
     document.getElementById("pinner").style.display = `none`
@@ -797,6 +818,8 @@ function showEditPopup(dat, pin) {
     editpopup.style.display = `flex`
     buildTable.style.pointerEvents = `none`
     document.getElementById("buttons").style.pointerEvents = `none`
+    pinnedTable.style.pointerEvents = `none`
+    buildTable.style.pointerEvents = `none`
     EDITING = dat.url
 }
 function closePopup() {
@@ -804,6 +827,8 @@ function closePopup() {
     editpopup.style.display = `none`
     buildTable.style.pointerEvents = `all`
     document.getElementById("buttons").style.pointerEvents = `all`
+    pinnedTable.style.pointerEvents = `all`
+    buildTable.style.pointerEvents = `all`
 }
 function saveEdit() {
     if (document.getElementById("editbuildName").value.length < 3) return;
