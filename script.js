@@ -721,6 +721,10 @@ function addBuild() {
 
     let id = url.searchParams.get("id")
 
+    console.log(`id for new build ${id}`)
+
+    if (id == null) return;
+
     let foundSame = false
     data.forEach(build => {
         if (build.url == id) {
@@ -737,15 +741,15 @@ function addBuild() {
 
     if (foundSame == true) return;
 
-    data.push({
+    /*data.push({
         "name": name,
         "url": id
-    })
+    })*/
 
     closePopup()
     save()
 
-    loadBuilds()
+    //loadBuilds()
 }
 
 const funnies = [
