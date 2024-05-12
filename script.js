@@ -3,6 +3,7 @@ let data = [
 ]
 let pinned = [
 ]
+let checklistBuilds = []
 
 const buildTable = document.getElementById("buildTable")
 const pinnedTable = document.getElementById("pinnedTable")
@@ -21,7 +22,9 @@ const buildAdd = document.getElementById("addBuild")
 
 let EDITING
 let COPYING = false
+let CHECKLIST
 let COPYINGURL
+let CHECKLISTURL
 
 buildTable.innerHTML = `<div class="loading"><img src="loading.png"></div>`
 line.style.display = `none`
@@ -50,6 +53,10 @@ function createNotif(html) {
 function setCopy(bool, url) {
     COPYINGURL = url
     COPYING = bool
+}
+function setChecklist(bool, url) {
+    CHECKLIST = bool
+    CHECKLISTURL = url
 }
 
 function loadBuild(id) {
@@ -161,6 +168,11 @@ function handleBuildClick(id) {
         navigator.clipboard.writeText(`https://deepwoken.co/builder?id=${COPYINGURL}`);
         createNotif(`<i class="fa-regular fa-clipboard"></i> copied build <b>${element.dataset.buildname}</b> to clipboard!`)
         return console.log(`copied ${COPYINGURL}`)
+    }
+    if (CHECKLIST) {
+        window.open(`https://nefarkitti.github.io/deepwoken-echo-checklist/?url=${id}`, `_blank`)
+        createNotif(`<i class="fa-solid fa-list-check"></i> opening echo checklist...`)
+        return
     }
 
     let buildElement = document.getElementById(`build-${id}`)
@@ -361,6 +373,20 @@ function loadBuilds() {
                 // i love webjs!
                 div.setAttribute("onclick", `handleBuildClick("${build.url}")`)
                 div.title = buildData.content.stats.buildName
+
+                let checklistLinked = false
+                console.log("checklist builds")
+                console.log(checklistBuilds.builds)
+                checklistBuilds.builds.forEach(checkBuild=>{
+                   if (checkBuild.buildurl == `https://deepwoken.co/builder?id=${build.url}`) {
+                    let rankSpan = document.createElement("span")
+                    rankSpan.classList.add("rankSpan")
+                    rankSpan.innerHTML = checkBuild.buildrank
+                    rankSpan.classList.add(`${checkBuild.buildrank.toLowerCase()}rank`)
+                    div.appendChild(rankSpan)
+                    checklistLinked = true
+                   }
+                })
 
                 let soo = document.createElement("b")
                 soo.style.overflow = `clip`
@@ -586,6 +612,15 @@ function loadBuilds() {
                 btn.setAttribute("onmouseenter", `setCopy(true, "${build.url}")`)
                 btn.setAttribute("onmouseleave", `setCopy(false, "")`)
 
+                const btn2 = document.createElement("span")
+                btn2.classList.add("copybtn")
+                btn2.classList.add("buttonstylized")
+                btn2.innerHTML = `<i class="fa-solid fa-list-check"></i>`
+
+                btn2.setAttribute("onmouseenter", `setChecklist(true, "${build.url}")`)
+                btn2.setAttribute("onmouseleave", `setChecklist(false, "")`)
+
+                buttonHolder.appendChild(btn2)
                 buttonHolder.appendChild(btn)
 
                 div.appendChild(buttonHolder)
@@ -790,16 +825,21 @@ function unPin() {
 function load() {
     const getSave = localStorage.getItem("builds");
     const getPinned = localStorage.getItem("pinnedbuilds")
+    const getChecklistBuilds = localStorage.getItem("buildtriumphsSaves")
     try {
         if (getSave != null && getPinned != null) {
             data = JSON.parse(getSave)
             pinned = JSON.parse(getPinned)
+            checklistBuilds = JSON.parse(getChecklistBuilds)
+        } else if (getChecklistBuilds == null) {
+            localStorage.setItem("buildtriumphsSaves", JSON.stringify(checklistBuilds))
         }
 
         // load pages based on provided data
         loadBuilds()
 
-    } catch {
+    } catch (e) {
+        console.log(e)
         console.log("data didn't load properly, throw error and show error overlay.")
     }
 }

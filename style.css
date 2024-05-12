@@ -340,12 +340,13 @@ truecenter {
     cursor: pointer;
   }
 .wrank {
-    -webkit-text-stroke-width: 1.5px;
+    -webkit-text-stroke-width: 0.6px;
+    font-weight: 900;
     -webkit-text-stroke-color: black;
     background: -webkit-linear-gradient(#B1EECF, #50BA8A);
     background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    -webkit-text-fill-color: #B1EECF;
 }
 .rank {
     font-size: 70px;
@@ -808,6 +809,7 @@ span.talent {
 
 .build .copybtn {
     display: none;
+    margin-left: 10px;
 }
 .build:hover .copybtn {
     display: unset;
@@ -841,6 +843,18 @@ span.talent {
 
 body.pin .copybtn,body.delete .copybtn,body.edit .copybtn {
     display: none !important;
+}
+
+.rankSpan {
+    text-align: right !important;
+    height: 10px;
+    margin-bottom: -10px;
+    font-size: 25px;
+    right: 8px;
+    position: relative;
+    font-style: italic;
+    font-family: none;
+    font-weight: 900;
 }
 
 @media screen and (max-width:1250px) {
