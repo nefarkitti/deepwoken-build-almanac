@@ -788,8 +788,8 @@ function unPin() {
 }
 
 function load() {
-    const getSave = localStorage.getItem("EDITbuilds");
-    const getPinned = localStorage.getItem("EDITpinnedbuilds")
+    const getSave = localStorage.getItem("builds");
+    const getPinned = localStorage.getItem("pinnedbuilds")
     try {
         if (getSave != null && getPinned != null) {
             data = JSON.parse(getSave)
@@ -806,8 +806,8 @@ function load() {
 function save() {
     data = data
     pinned = pinned
-    localStorage.setItem("EDITbuilds", JSON.stringify(data))
-    localStorage.setItem("EDITpinnedbuilds", JSON.stringify(pinned))
+    localStorage.setItem("builds", JSON.stringify(data))
+    localStorage.setItem("pinnedbuilds", JSON.stringify(pinned))
 }
 
 //save()
