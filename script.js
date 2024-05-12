@@ -376,17 +376,20 @@ function loadBuilds() {
 
                 let checklistLinked = false
                 console.log("checklist builds")
-                console.log(checklistBuilds.builds)
-                checklistBuilds.builds.forEach(checkBuild=>{
-                   if (checkBuild.buildurl == `https://deepwoken.co/builder?id=${build.url}`) {
-                    let rankSpan = document.createElement("span")
-                    rankSpan.classList.add("rankSpan")
-                    rankSpan.innerHTML = checkBuild.buildrank
-                    rankSpan.classList.add(`${checkBuild.buildrank.toLowerCase()}rank`)
-                    div.appendChild(rankSpan)
-                    checklistLinked = true
-                   }
-                })
+                try {
+                    checklistBuilds.builds.forEach(checkBuild=>{
+                        if (checkBuild.buildurl == `https://deepwoken.co/builder?id=${build.url}`) {
+                         let rankSpan = document.createElement("span")
+                         rankSpan.classList.add("rankSpan")
+                         rankSpan.innerHTML = checkBuild.buildrank
+                         rankSpan.classList.add(`${checkBuild.buildrank.toLowerCase()}rank`)
+                         div.appendChild(rankSpan)
+                         checklistLinked = true
+                        }
+                     })
+                } catch {
+                    console.log("failed to load checklist builds")
+                }
 
                 let soo = document.createElement("b")
                 soo.style.overflow = `clip`
@@ -827,12 +830,13 @@ function load() {
     const getPinned = localStorage.getItem("pinnedbuilds")
     const getChecklistBuilds = localStorage.getItem("buildtriumphsSaves")
     try {
-        if (getSave != null && getPinned != null) {
+        if (getSave != null && getPinned != null && getChecklistBuilds != null) {
             data = JSON.parse(getSave)
             pinned = JSON.parse(getPinned)
             checklistBuilds = JSON.parse(getChecklistBuilds)
         } else if (getChecklistBuilds == null) {
-            localStorage.setItem("buildtriumphsSaves", JSON.stringify(checklistBuilds))
+            let getChecklist = localStorage.setItem("buildtriumphsSaves", JSON.stringify(checklistBuilds))
+            checklistBuilds = JSON.parse(getChecklist)
         }
 
         // load pages based on provided data
