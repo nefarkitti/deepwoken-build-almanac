@@ -586,7 +586,7 @@ truecenter {
     align-items: flex-start;
     flex-wrap: wrap;
 }
-.buildsTable div:not(.loading,.tags),.addBuild {
+.buildsTable div:not(.loading,.tags,.container),.addBuild {
     width: calc(50% - 5px);
     text-align: left;
     color: #575757;
@@ -596,16 +596,16 @@ truecenter {
     box-sizing: border-box;
     border-radius: 5px;
 }
-.buildsTable div:not(.loading,.tags):hover,.addBuild:hover {
+.buildsTable div:not(.loading,.tags,.container):hover,.addBuild:hover {
     cursor: pointer;
     color: black;
     border-bottom: 2px solid black;
     background-color: rgba(0, 0, 0, 0.043);
 }
-.buildsTable div:not(.loading,.tags):hover img {
+.buildsTable div:not(.loading,.tags,.container):hover img {
     filter: brightness(110%) opacity(100%);
 }
-.buildsTable div:not(.loading,.tags):hover span {
+.buildsTable div:not(.loading,.tags,.container):hover span {
     filter: opacity(100%);
 }
 .build {
@@ -647,6 +647,19 @@ truecenter {
 }
 .fa-torii-gate {
     margin-left: 2px;
+}
+
+.build .container {
+    display: flex;
+    justify-content: flex-end;
+}
+.build .buttonstylized {
+    margin: 0;
+    margin-bottom: -25px;
+    bottom: 25px;
+    right: 2px;
+    position: relative;
+    padding: 5px 10px;
 }
 
 @keyframes spinner {
@@ -793,6 +806,43 @@ span.talent {
     font-size: 18px;
 }
 
+.build .copybtn {
+    display: none;
+}
+.build:hover .copybtn {
+    display: unset;
+}
+
+.notif-container {
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    z-index: 9999999999999999;
+    user-select: none;
+    pointer-events: none;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    flex-direction: column;
+}
+.notif {
+    background-color: #E5E0CA;
+    border: 1px solid transparent;
+    border-image: url('border.png') 45%;
+    border-image-width: 15px;
+    border-image-outset: 2px;
+    color: #575757;
+    width: fit-content;
+    margin: 10px;
+    padding: 10px;
+    font-family: 'Roboto', sans-serif;
+    transition: 1s;
+}
+
+body.pin .copybtn,body.delete .copybtn,body.edit .copybtn {
+    display: none !important;
+}
+
 @media screen and (max-width:1250px) {
     body {
         overflow-x: hidden !important;
@@ -856,6 +906,9 @@ span.talent {
     .checklist table tr {
         width: 100%;
         display: contents;
+    }
+    .copybtn {
+        display: none !important;
     }
     .checklist table {
         display: flex !important;

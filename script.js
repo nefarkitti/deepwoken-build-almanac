@@ -13,15 +13,44 @@ const statistics = document.getElementById("statistics")
 const currentmode = document.getElementById("currentmode")
 const buttons = document.getElementById("buttons")
 const line = document.getElementById("line")
+const notifs = document.getElementById("notif-container")
 
 const buildName = document.getElementById("buildName")
 const buildLink = document.getElementById("buildLink")
 const buildAdd = document.getElementById("addBuild")
 
 let EDITING
+let COPYING = false
+let COPYINGURL
 
 buildTable.innerHTML = `<div class="loading"><img src="loading.png"></div>`
 line.style.display = `none`
+notifs.innerHTML = ``
+
+function createNotif(html) {
+    let div = document.createElement("div")
+    div.classList.add("notif")
+
+    let span = document.createElement("span")
+    span.innerHTML = html
+
+    div.appendChild(span)
+
+    notifs.appendChild(div)
+
+    setTimeout(() => {
+        div.style.transition = `1s`
+        div.style.filter = `opacity(0%)`
+    }, 2000);
+    setTimeout(() => {
+        div.remove()
+    }, 3000);
+}
+
+function setCopy(bool, url) {
+    COPYINGURL = url
+    COPYING = bool
+}
 
 function loadBuild(id) {
 
@@ -57,6 +86,13 @@ function applyMode(m) {
         console.log(item)
         document.getElementById(`${item}btn`).style.backgroundColor = `#40504C`
     })
+
+    document.body.classList.remove("normal")
+    document.body.classList.remove("edit")
+    document.body.classList.remove("pin")
+    document.body.classList.remove("delete")
+
+    document.body.classList.add(m)
 
     if (m == "normal") {
         document.querySelectorAll(".build").forEach(build => {
@@ -119,6 +155,13 @@ document.querySelectorAll(".upperbtn").forEach(btn => {
 })
 
 function handleBuildClick(id) {
+
+    if (COPYING) {
+        let element = document.getElementById(`build-${id}`)
+        navigator.clipboard.writeText(`https://deepwoken.co/builder?id=${COPYINGURL}`);
+        createNotif(`<i class="fa-regular fa-clipboard"></i> copied build <b>${element.dataset.buildname}</b> to clipboard!`)
+        return console.log(`copied ${COPYINGURL}`)
+    }
 
     let buildElement = document.getElementById(`build-${id}`)
     if (mode == "normal") {
@@ -225,6 +268,12 @@ function loadBuilds() {
         console.log("no builds to load!")
         //buildTable.innerHTML = `<span onclick="showBuildPopup()" class="addBuild" id="addBuild"><i class="fa-solid fa-plus"></i> Add new build</span>`
         addBuild.style.display = ``
+        document.body.classList.remove("normal")
+        document.body.classList.remove("edit")
+        document.body.classList.remove("pin")
+        document.body.classList.remove("delete")
+    
+        document.body.classList.add("normal")
         mode = "normal"
         modeHandle("normal")
         return 0
@@ -299,6 +348,7 @@ function loadBuilds() {
                 const div = document.createElement("div")
                 div.id = `build-${build.url}`
                 div.dataset.buildid = build.url
+                div.dataset.buildname = build.name
                 div.classList.add("build")
                 if (location == "pinned") {
                     div.dataset.pinned = 1
@@ -521,6 +571,21 @@ function loadBuilds() {
 
                 div.appendChild(extra2)
 
+                const buttonHolder = document.createElement("div")
+                buttonHolder.classList.add("container")
+
+                const btn = document.createElement("span")
+                btn.classList.add("copybtn")
+                btn.classList.add("buttonstylized")
+                btn.innerHTML = `<i class="fa-solid fa-copy"></i>`
+
+                btn.setAttribute("onmouseenter", `setCopy(true, "${build.url}")`)
+                btn.setAttribute("onmouseleave", `setCopy(false, "")`)
+
+                buttonHolder.appendChild(btn)
+
+                div.appendChild(buttonHolder)
+
                 if (location == "pinned") {
                     pinnedTable.appendChild(div)
                 } else {
@@ -528,6 +593,12 @@ function loadBuilds() {
                 }
                 index++
 
+                document.body.classList.remove("normal")
+                document.body.classList.remove("edit")
+                document.body.classList.remove("pin")
+                document.body.classList.remove("delete")
+            
+                document.body.classList.add("normal")
                 mode = "normal"
                 
                 line.style.display =`none`
@@ -538,7 +609,7 @@ function loadBuilds() {
                     line.style.display =`none`
                 }
 
-                if (index == data.length && mode == "normal") {
+                if (index == (data.length + pinned.length) && mode == "normal") {
                     buildAdd.style.display = ``
                     buttons.style.display = ``
                 }
@@ -565,6 +636,8 @@ function loadBuilds() {
             }
         }
     }
+
+    index = 0
 
     if (pinned.length >= 1) {
         pinnedTable.style.display = ``

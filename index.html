@@ -20,8 +20,13 @@
     <meta property="og:image:type" content="image/png">
 </head>
 <body>
+    <div class="notif-container" id="notif-container">
+        <div class="notif">
+            <span>copied to clipboard!</span>
+        </div>
+    </div>
     <div class="bg">
-        <div class="thing"><img src="favicon.png" width="75" height="75" alt="" style="image-rendering: pixelated;"><br>v2.1</div>
+        <div class="thing"><img src="favicon.png" width="75" height="75" alt="" style="image-rendering: pixelated;"><br>v2.2</div>
     </div>
     <truecenter class="alt">
         <div class="main-left">
@@ -83,7 +88,7 @@
             <span class="reset-contents">
                 <div>
                     <label for="buildName">Build Name:</label>
-                    <input type="text" name="buildName" id="buildName">
+                    <input type="text" name="buildName" id="buildName" maxlength="30">
                 </div>
                 <div>
                     <label for="buildLink">Builder Link:</label>
@@ -102,7 +107,7 @@
             <span class="reset-contents">
                 <div>
                     <label for="buildName">Build Name:</label>
-                    <input type="text" name="buildName" id="editbuildName">
+                    <input type="text" name="buildName" id="editbuildName" maxlength="30">
                 </div>
             </span>
             <span id="errorText" style="margin-bottom: 10px"></span>
