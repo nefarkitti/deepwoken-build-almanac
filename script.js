@@ -276,7 +276,7 @@ function loadBuilds() {
         document.getElementById(`${item}btn`).style.backgroundColor = `#40504C`
     })
 
-    if (data.length <= 0) {
+    if ((data.length + pinned.length) <= 0) {
         console.log("no builds to load!")
         //buildTable.innerHTML = `<span onclick="showBuildPopup()" class="addBuild" id="addBuild"><i class="fa-solid fa-plus"></i> Add new build</span>`
         buildAdd.style.display = ``
@@ -680,6 +680,9 @@ function loadBuilds() {
     }
 
     index = 0
+
+    console.log(`PINNED LENGTH ${pinned.length}`)
+    console.log(`BUILDS LENGTH ${pinned.length}`)
 
     if (pinned.length >= 1) {
         pinnedTable.style.display = ``
