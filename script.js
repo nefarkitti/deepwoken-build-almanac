@@ -267,7 +267,9 @@ function loadBuilds() {
     if (data.length <= 0) {
         console.log("no builds to load!")
         //buildTable.innerHTML = `<span onclick="showBuildPopup()" class="addBuild" id="addBuild"><i class="fa-solid fa-plus"></i> Add new build</span>`
-        addBuild.style.display = ``
+        buildAdd.style.display = ``
+        buttons.style.display = ``
+        buildTable.innerHTML = `<i>Maybe try adding some builds...</i>`
         document.body.classList.remove("normal")
         document.body.classList.remove("edit")
         document.body.classList.remove("pin")
@@ -337,6 +339,8 @@ function loadBuilds() {
                 if (index == 0) {
                     buildTable.innerHTML = ``
                 }
+
+                console.log(1)
 
                 const buildData = xhr.response;
                 console.log(build.name.toUpperCase())
@@ -784,8 +788,8 @@ function unPin() {
 }
 
 function load() {
-    const getSave = localStorage.getItem("builds");
-    const getPinned = localStorage.getItem("pinnedbuilds")
+    const getSave = localStorage.getItem("EDITbuilds");
+    const getPinned = localStorage.getItem("EDITpinnedbuilds")
     try {
         if (getSave != null && getPinned != null) {
             data = JSON.parse(getSave)
@@ -802,8 +806,8 @@ function load() {
 function save() {
     data = data
     pinned = pinned
-    localStorage.setItem("builds", JSON.stringify(data))
-    localStorage.setItem("pinnedbuilds", JSON.stringify(pinned))
+    localStorage.setItem("EDITbuilds", JSON.stringify(data))
+    localStorage.setItem("EDITpinnedbuilds", JSON.stringify(pinned))
 }
 
 //save()
