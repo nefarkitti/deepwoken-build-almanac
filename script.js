@@ -27,6 +27,15 @@ let CHECKLIST
 let COPYINGURL
 let CHECKLISTURL
 
+let storeStat = ["Strength", "Fortitude", "Agility", "Intelligence", "Willpower", "Charisma"]
+let shorthand = ["STR", "FTD", "AGL", "INT", "WLL", "CHR"]
+let store = ["Flamecharm", "Frostdraw", "Thundercall", "Galebreathe", "Shadowcast", "Ironsing"]
+let elmShorthand = ["LTN", "ICE", "FLM", "IRN", "SDW", "WND"]
+let storeWPN = ["Heavy Wep.", "Medium Wep.", "Light Wep."]
+let wpnShorthand = ["HVY", "MED", "LHT"]
+let oaths = ["Arcwarder", "Blindseer", "Contractor", "Dawnwalker", "Fadetrimmer", "Jetstriker", "Linkstrider", "Oathless", "Saltchemist", "Silentheart", "Starkindred", "Visionshaper"]
+let races = ["Adret","Etrean","Vesperian","Canor","Capra","Celtor","Chrysid","Felinor","Ganymede","Gremor","Khan","Tiran"]
+
 buildTable.innerHTML = `<div class="loading"><img src="loading.png"></div>`
 line.style.display = `none`
 notifs.innerHTML = ``
@@ -104,7 +113,7 @@ function applyMode(m) {
 
     if (m == "normal") {
         document.querySelectorAll(".build").forEach(build => {
-            build.style.background = `none`
+            build.style.background = `rgba(0, 0, 0, 0.078)`
         })
         add.style.display = ``
     } else {
@@ -252,15 +261,6 @@ function handleBuildClick(id) {
     }
 }
 
-let storeStat = ["Strength", "Fortitude", "Agility", "Intelligence", "Willpower", "Charisma"]
-let shorthand = ["STR", "FTD", "AGL", "INT", "WLL", "CHR"]
-let store = ["Thundercall", "Frostdraw", "Flamecharm", "Ironsing", "Shadowcast", "Galebreathe"]
-let elmShorthand = ["LTN", "ICE", "FLM", "IRN", "SDW", "WND"]
-let storeWPN = ["Heavy Wep.", "Medium Wep.", "Light Wep."]
-let wpnShorthand = ["HVY", "MED", "LHT"]
-let oaths = ["Arcwarder", "Blindseer", "Contractor", "Dawnwalker", "Fadetrimmer", "Jetstriker", "Linkstrider", "Oathless", "Saltchemist", "Silentheart", "Starkindred", "Visionshaper"]
-let races = ["Adret","Etrean","Vesperian","Canor","Capra","Celtor","Chrysid","Felinor","Ganymede","Gremor","Khan","Tiran"]
-
 function modifyStatString(stat) {
     if (stat >= 1) {
         return `(${stat})`
@@ -350,6 +350,7 @@ function showBuildStats(build, extraData, checklistData) {
 
     <hr>
 
+    <div id="build-attunements">
     <span class="statline">
     <span>Flamecharm </span>
     <span><span class="preshrine">${preShrineStats["Flamecharm"]}</span> ${build.content.attributes.attunement.Flamecharm}</span>
@@ -374,8 +375,7 @@ function showBuildStats(build, extraData, checklistData) {
     <span>Ironsing </span>
     <span><span class="preshrine">${preShrineStats["Ironsing"]}</span> ${build.content.attributes.attunement.Ironsing}</span>
     </span>
-
-    <hr>
+    </div>
 
     <span class="statline">
     <span>Strength </span>
@@ -402,6 +402,26 @@ function showBuildStats(build, extraData, checklistData) {
     <span><span class="preshrine">${preShrineStats["Charisma"]}</span> ${build.content.attributes.base.Charisma}</span>
     </span>
     `
+
+    let attunementsDiv = document.getElementById("build-attunements")
+    attunementsDiv.innerHTML = ``
+
+    let attuned = false
+    store.forEach(attunement => {
+        if (build.content.attributes.attunement[attunement] >= 1) {
+            attuned = true
+            attunementsDiv.innerHTML += `
+            <span class="statline">
+            <span>${attunement} </span>
+            <span><span class="preshrine">${preShrineStats[attunement]}</span> ${build.content.attributes.attunement[attunement]}</span>
+            </span>
+            `
+        }
+    })
+    if (attuned) {
+        attunementsDiv.innerHTML += `<hr>`
+    }
+
 }
 function hideBuildStats() {
     statistics.innerHTML = ``
@@ -527,6 +547,17 @@ function loadBuilds() {
                 div.setAttribute("onclick", `handleBuildClick("${build.url}")`)
                 div.title = buildData.content.stats.buildName
 
+                const holder = document.createElement("div")
+                holder.classList.add("textcontainer")
+                holder.classList.add("holder")
+
+                const img = document.createElement("img")
+                img.src = "hibob/speed.gif"
+                img.classList.add("buildimage")
+
+                const textContainer = document.createElement("div")
+                textContainer.classList.add("textcontainer")
+
                 let checklistLinked = false
                 console.log("checklist builds")
                 let checklistBuild = 0
@@ -568,7 +599,7 @@ function loadBuilds() {
                 bname.style.marginLeft = `2px`
                 span.appendChild(bname)
 
-                div.appendChild(span)
+                textContainer.appendChild(span)
 
                 let tags = document.createElement("div")
                 tags.classList.add("tags")
@@ -734,7 +765,7 @@ function loadBuilds() {
                     })
                 }
 
-                div.appendChild(tags)
+                textContainer.appendChild(tags)
 
                 let extra = document.createElement("span")
                 extra.classList.add("extra")
@@ -748,8 +779,8 @@ function loadBuilds() {
                 PRO ${buildData.content.stats.traits.Proficiency} 
                 SNG ${buildData.content.stats.traits.Songchant}</b>`
 
-                div.appendChild(extra)
-                div.appendChild(extra3)
+                textContainer.appendChild(extra)
+                textContainer.appendChild(extra3)
 
                 let extra2 = document.createElement("span")
                 extra2.classList.add("extra")
@@ -760,7 +791,7 @@ function loadBuilds() {
                     extra2.innerText = `by Nobody!`
                 }
 
-                div.appendChild(extra2)
+                textContainer.appendChild(extra2)
 
                 const buttonHolder = document.createElement("div")
                 buttonHolder.classList.add("container")
@@ -783,6 +814,11 @@ function loadBuilds() {
 
                 buttonHolder.appendChild(btn2)
                 buttonHolder.appendChild(btn)
+
+                //holder.appendChild(img)
+                holder.appendChild(textContainer)
+
+                div.appendChild(holder)
 
                 div.appendChild(buttonHolder)
 
