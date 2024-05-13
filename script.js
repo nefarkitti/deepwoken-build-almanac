@@ -1,4 +1,5 @@
-
+// there is definitely a better way to go about this
+// point stands that it works
 let data = [
 ]
 let pinned = [
@@ -260,6 +261,152 @@ let wpnShorthand = ["HVY", "MED", "LHT"]
 let oaths = ["Arcwarder", "Blindseer", "Contractor", "Dawnwalker", "Fadetrimmer", "Jetstriker", "Linkstrider", "Oathless", "Saltchemist", "Silentheart", "Starkindred", "Visionshaper"]
 let races = ["Adret","Etrean","Vesperian","Canor","Capra","Celtor","Chrysid","Felinor","Ganymede","Gremor","Khan","Tiran"]
 
+function modifyStatString(stat) {
+    if (stat >= 1) {
+        return `(${stat})`
+    } else {
+        return ""
+    }
+}
+
+function showBuildStats(build, extraData, checklistData) {
+    console.log("yolo")
+    let shrine = false
+    let preShrineStats = {
+        "Heavy Wep.": "",
+        "Medium Wep.": "",
+        "Light Wep.": "",
+
+        "Flamecharm": "",
+        "Frostdraw": "",
+        "Thundercall": "",
+        "Galebreathe": "",
+        "Shadowcast": "",
+        "Ironsing": "",
+
+        "Strength": "",
+        "Fortitude": "",
+        "Agility": "",
+        "Intelligence": "",
+        "Willpower": "",
+        "Charisma": ""
+    }
+    console.log("shrine check")
+    if (build.content.preShrine) {
+        shrine = true
+        Object.assign(preShrineStats, {
+            "Heavy Wep.": `${modifyStatString(build.content.preShrine.weapon["Heavy Wep."])}`,
+            "Medium Wep.": `${modifyStatString(build.content.preShrine.weapon["Medium Wep."])}`,
+            "Light Wep.": `${modifyStatString(build.content.preShrine.weapon["Light Wep."])}`,
+    
+            "Flamecharm": `${modifyStatString(build.content.preShrine.attunement["Flamecharm"])}`,
+            "Frostdraw": `${modifyStatString(build.content.preShrine.attunement["Frostdraw"])}`,
+            "Thundercall": `${modifyStatString(build.content.preShrine.attunement["Thundercall"])}`,
+            "Galebreathe": `${modifyStatString(build.content.preShrine.attunement["Galebreathe"])}`,
+            "Shadowcast": `${modifyStatString(build.content.preShrine.attunement["Shadowcast"])}`,
+            "Ironsing": `${modifyStatString(build.content.preShrine.attunement["Ironsing"])}`,
+    
+            "Strength": `${modifyStatString(build.content.preShrine.base["Strength"])}`,
+            "Fortitude": `${modifyStatString(build.content.preShrine.base["Fortitude"])}`,
+            "Agility": `${modifyStatString(build.content.preShrine.base["Agility"])}`,
+            "Intelligence": `${modifyStatString(build.content.preShrine.base["Intelligence"])}`,
+            "Willpower": `${modifyStatString(build.content.preShrine.base["Willpower"])}`,
+            "Charisma": `${modifyStatString(build.content.preShrine.base["Charimsa"])}`
+        })
+    }
+
+    let rank = ""
+    if (checklistData) {
+        rank = checklistData.buildrank
+    }
+    statistics.innerHTML = `
+    <span class="statline">
+    <span>Oath </span>
+    <span>${build.content.stats.meta.Oath}</span>
+    </span>
+    <span class="statline">
+    <span>Race </span>
+    <span>${build.content.stats.meta.Race}</span>
+    </span>
+    <span class="statline">
+    <span>Rank </span>
+    <span>${rank}</span>
+    </span>
+
+    <hr>
+
+    <span class="statline">
+    <span>Heavy Weapon </span>
+    <span><span class="preshrine">${preShrineStats["Heavy Wep."]}</span> ${build.content.attributes.weapon["Heavy Wep."]}</span>
+    </span>
+    <span class="statline">
+    <span>Medium Weapon </span>
+    <span><span class="preshrine">${preShrineStats["Medium Wep."]}</span> ${build.content.attributes.weapon["Medium Wep."]}</span>
+    </span>
+    <span class="statline">
+    <span>Light Weapon </span>
+    <span><span class="preshrine">${preShrineStats["Light Wep."]}</span> ${build.content.attributes.weapon["Light Wep."]}</span>
+    </span>
+
+    <hr>
+
+    <span class="statline">
+    <span>Flamecharm </span>
+    <span><span class="preshrine">${preShrineStats["Flamecharm"]}</span> ${build.content.attributes.attunement.Flamecharm}</span>
+    </span>
+    <span class="statline">
+    <span>Frostdraw </span>
+    <span><span class="preshrine">${preShrineStats["Frostdraw"]}</span> ${build.content.attributes.attunement.Frostdraw}</span>
+    </span>
+    <span class="statline">
+    <span>Thundercall </span>
+    <span><span class="preshrine">${preShrineStats["Thundercall"]}</span> ${build.content.attributes.attunement.Thundercall}</span>
+    </span>
+    <span class="statline">
+    <span>Galebreathe </span>
+    <span><span class="preshrine">${preShrineStats["Galebreathe"]}</span> ${build.content.attributes.attunement.Galebreathe}</span>
+    </span>
+    <span class="statline">
+    <span>Shadowcast </span>
+    <span><span class="preshrine">${preShrineStats["Shadowcast"]}</span> ${build.content.attributes.attunement.Shadowcast}</span>
+    </span>
+    <span class="statline">
+    <span>Ironsing </span>
+    <span><span class="preshrine">${preShrineStats["Ironsing"]}</span> ${build.content.attributes.attunement.Ironsing}</span>
+    </span>
+
+    <hr>
+
+    <span class="statline">
+    <span>Strength </span>
+    <span><span class="preshrine">${preShrineStats["Strength"]}</span> ${build.content.attributes.base.Strength}</span>
+    </span>
+    <span class="statline">
+    <span>Fortitude </span>
+    <span><span class="preshrine">${preShrineStats["Fortitude"]}</span> ${build.content.attributes.base.Fortitude}</span>
+    </span>
+    <span class="statline">
+    <span>Agility </span>
+    <span><span class="preshrine">${preShrineStats["Agility"]}</span> ${build.content.attributes.base.Agility}</span>
+    </span>
+    <span class="statline">
+    <span>Intelligence </span>
+    <span><span class="preshrine">${preShrineStats["Intelligence"]}</span> ${build.content.attributes.base.Intelligence}</span>
+    </span>
+    <span class="statline">
+    <span>Willpower </span>
+    <span><span class="preshrine">${preShrineStats["Willpower"]}</span> ${build.content.attributes.base.Willpower}</span>
+    </span>
+    <span class="statline">
+    <span>Charisma </span>
+    <span><span class="preshrine">${preShrineStats["Charisma"]}</span> ${build.content.attributes.base.Charisma}</span>
+    </span>
+    `
+}
+function hideBuildStats() {
+    statistics.innerHTML = ``
+}
+
 function loadBuilds() {
     buildTable.innerHTML = `<div class="loading"><img src="loading.png"></div>`
     pinnedTable.innerHTML = ``
@@ -382,9 +529,11 @@ function loadBuilds() {
 
                 let checklistLinked = false
                 console.log("checklist builds")
+                let checklistBuild = 0
                 try {
                     checklistBuilds.builds.forEach(checkBuild=>{
                         if (checkBuild.buildurl == `https://deepwoken.co/builder?id=${build.url}`) {
+                        checklistBuild = checkBuild
                          let rankSpan = document.createElement("span")
                          rankSpan.classList.add("rankSpan")
                          rankSpan.innerHTML = checkBuild.buildrank
@@ -396,6 +545,9 @@ function loadBuilds() {
                 } catch {
                     console.log("failed to load checklist builds")
                 }
+
+                div.setAttribute("onmouseenter", `showBuildStats(${JSON.stringify(buildData)}, ${JSON.stringify(build)}, ${JSON.stringify(checklistBuild)})`)
+                div.setAttribute("onmouseleave", `hideBuildStats()`)
 
                 let soo = document.createElement("b")
                 soo.style.overflow = `clip`
@@ -486,8 +638,8 @@ function loadBuilds() {
 
                 })
 
-                statistics.innerHTML = ``
-                for (let i = 0; i < storeWPN.length; i++) {
+                //statistics.innerHTML = ``
+                /*for (let i = 0; i < storeWPN.length; i++) {
                     const sp = document.createElement("span")
                     sp.classList.add("statline")
 
@@ -543,7 +695,7 @@ function loadBuilds() {
                 </span>
                 `
 
-                statistics.innerHTML += `<span style="font-size: 10px;filter: opacity(40%);">* across all builds</span>`
+                statistics.innerHTML += `<span style="font-size: 10px;filter: opacity(40%);">* across all builds</span>`*/
 
                 let legendaryTalents = [
                     "Neural Overload",
@@ -792,7 +944,9 @@ const funnies = [
     "IRONSING META",
     "FLAMECHARM META",
     "mantra spam #234",
-    "Frost Mage"
+    "Frost Mage",
+    "Shadow Ironsing",
+    "Azure Pyrekeeper"
 ]
 function showBuildPopup() {
     buildLink.value = ""
