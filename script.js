@@ -142,7 +142,7 @@ function applyMode(m) {
 
 function modeHandle(m) {
 
-    if (data.length <= 0) return
+    if ((data.length + pinned.length) <= 0) return
 
     if (mode == "normal") {
         mode = m
