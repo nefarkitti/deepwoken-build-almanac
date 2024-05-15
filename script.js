@@ -311,7 +311,7 @@ function showBuildStats(build, extraData, checklistData) {
             "Agility": `${modifyStatString(build.content.preShrine.base["Agility"])}`,
             "Intelligence": `${modifyStatString(build.content.preShrine.base["Intelligence"])}`,
             "Willpower": `${modifyStatString(build.content.preShrine.base["Willpower"])}`,
-            "Charisma": `${modifyStatString(build.content.preShrine.base["Charimsa"])}`
+            "Charisma": `${modifyStatString(build.content.preShrine.base["Charisma"])}`
         })
     }
 
