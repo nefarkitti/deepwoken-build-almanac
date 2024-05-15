@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deepwoken Build Almanac</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="shortcut icon" href="favicon.png">
+    <link rel="shortcut icon" href="assets/favicon.png">
     <script src="script.js" defer></script>
     <script src="https://kit.fontawesome.com/d250854114.js" crossorigin="anonymous"></script>
     <meta charset="UTF-8">
@@ -26,7 +26,7 @@
         </div>
     </div>
     <div class="bg">
-        <div class="thing"><img src="favicon.png" width="75" height="75" alt="" style="image-rendering: pixelated;"><br>v3.1</div>
+        <div class="thing"><img src="assets/favicon.png" width="75" height="75" alt="" style="image-rendering: pixelated;"><br>v3.1</div>
     </div>
     <truecenter class="alt">
         <div class="main-left">
@@ -52,10 +52,10 @@
                     <b style="font-weight: 200;">Gallery</b>
                     <span id="currentmode">current mode</span>
                     <b id="buttons">
-                        <span class="reset-btn modebtn upperbtn" data-mode="delete" id="deletebtn"><i class="fa-solid fa-trash-can"></i></span> 
-                        <span class="reset-btn modebtn upperbtn" id="editbtn" data-mode="edit"><i class="fa-solid fa-pencil"></i></span>
-                    <span class="reset-btn modebtn upperbtn" id="pinbtn" data-mode="pin"><i class="fa-solid fa-thumbtack"></i></span>
-                        <span onclick="showBuildPopup()" class="addBuild reset-btn" id="addBuild"><i class="fa-solid fa-plus"></i> <span>Add new build</span></span>
+                        <span title="Delete" class="reset-btn modebtn upperbtn" data-mode="delete" id="deletebtn"><i class="fa-solid fa-trash-can"></i></span> 
+                        <span title="Edit" class="reset-btn modebtn upperbtn" id="editbtn" data-mode="edit"><i class="fa-solid fa-pencil"></i></span>
+                        <span title="Pin" class="reset-btn modebtn upperbtn" id="pinbtn" data-mode="pin"><i class="fa-solid fa-thumbtack"></i></span>
+                        <span title="Add new build" onclick="showBuildPopup()" class="addBuild reset-btn" id="addBuild"><i class="fa-solid fa-plus"></i> <span>Add new build</span></span>
                     </b>
                 </div>
                 <div class="checklist" style="user-select: none;">

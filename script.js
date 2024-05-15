@@ -36,7 +36,7 @@ let wpnShorthand = ["HVY", "MED", "LHT"]
 let oaths = ["Arcwarder", "Blindseer", "Contractor", "Dawnwalker", "Fadetrimmer", "Jetstriker", "Linkstrider", "Oathless", "Saltchemist", "Silentheart", "Starkindred", "Visionshaper"]
 let races = ["Adret","Etrean","Vesperian","Canor","Capra","Celtor","Chrysid","Felinor","Ganymede","Gremor","Khan","Tiran"]
 
-buildTable.innerHTML = `<div class="loading"><img src="loading.png"></div>`
+buildTable.innerHTML = `<div class="loading"><img src="assets/loading.png"></div>`
 line.style.display = `none`
 notifs.innerHTML = ``
 
@@ -127,7 +127,9 @@ function applyMode(m) {
             add.style.display = `none`
         } else if (m == "pin") {
             document.querySelectorAll(".build").forEach(build => {
-                build.style.background = `rgba(127, 255, 255, 0.4)`
+                if (!build.dataset.pinned == 1) {
+                    build.style.background = `rgba(127, 255, 255, 0.4)`
+                }
             })
             add.style.display = `none`
         } else if (m == "edit") {
@@ -270,7 +272,7 @@ function modifyStatString(stat) {
 }
 
 function showBuildStats(build, extraData, checklistData) {
-    console.log("yolo")
+    //console.log("yolo")
     let shrine = false
     let preShrineStats = {
         "Heavy Wep.": "",
@@ -291,7 +293,7 @@ function showBuildStats(build, extraData, checklistData) {
         "Willpower": "",
         "Charisma": ""
     }
-    console.log("shrine check")
+    //console.log("shrine check")
     if (build.content.preShrine) {
         shrine = true
         Object.assign(preShrineStats, {
@@ -428,7 +430,7 @@ function hideBuildStats() {
 }
 
 function loadBuilds() {
-    buildTable.innerHTML = `<div class="loading"><img src="loading.png"></div>`
+    buildTable.innerHTML = `<div class="loading"><img src="assets/loading.png"></div>`
     pinnedTable.innerHTML = ``
     statistics.innerHTML = ``
     currentmode.innerHTML = ``
@@ -610,9 +612,11 @@ function loadBuilds() {
 
                 store.forEach(attunement => {
                     
-                    storeAvgStats[attunement] += buildData.content.attributes.attunement[attunement]
+                    //storeAvgStats[attunement] += buildData.content.attributes.attunement[attunement]
 
-                    console.log(buildData.content.preShrine.attunement[attunement])
+                    //console.log(buildData.content.preShrine.attunement[attunement])
+                    console.log(buildData.content.attributes.attunement[attunement])
+                    console.log(attunement)
                     if (buildData.content.attributes.attunement[attunement] >= 1 || buildData.content.preShrine.attunement[attunement] >= 1) {
                         console.log(`add ${attunement}`)
                         attunements.push(attunement)
@@ -620,7 +624,7 @@ function loadBuilds() {
                 })
                 storeWPN.forEach(weapon => {
 
-                    storeAvgStats[weapon] += buildData.content.attributes.weapon[weapon]
+                    //storeAvgStats[weapon] += buildData.content.attributes.weapon[weapon]
 
                     if (buildData.content.attributes.weapon[weapon] >= 1) {
                         weapons.push(weapon)
@@ -638,32 +642,34 @@ function loadBuilds() {
                 }
                 console.log(attunements)
                 if (attunements.length <= 0) {
-                    tags.innerHTML += `<img src="attunements/no-attunement-better.png">`
+                    tags.innerHTML += `<img title="No Attunement" src="attunements/no-attunement-better.png">`
                 } else {
                     attunements.forEach(attune => {
-                        tags.innerHTML += `<img src="attunements/${attune.toLowerCase()}-better.png">`
+                        tags.innerHTML += `<img title="${attune}" src="attunements/${attune.toLowerCase()}-better.png">`
                     })
                 }
 
                 if (weapons.length >= 1) {
                     weapons.forEach(weapon => {
-                        tags.innerHTML += `<span class="weapon">${wpnShorthand[storeWPN.indexOf(weapon)]}</span>`
+                        tags.innerHTML += `<span class="weapon" title="${storeWPN[storeWPN.indexOf(weapon)]}">${wpnShorthand[storeWPN.indexOf(weapon)]}</span>`
                     })
                 }
 
                 stats.forEach(stat => {
 
-                    if (buildData.content.preShrine) {
-                        storeAvgStats[stat.name] += buildData.content.preShrine.base[stat.name]
-                    } else {
-                        storeAvgStats[stat.name] += stat.value
-                    }
+                    //if (buildData.content.preShrine) {
+                    //    storeAvgStats[stat.name] += buildData.content.preShrine.base[stat.name]
+                    //} else {
+                    //    storeAvgStats[stat.name] += stat.value
+                    //}
 
                     //why doesnt this work??
                     //storeAvgStats[stat.name] = storeAvgStats[stat.name] + stat.value
+                    console.log("loading stats")
+                    console.log(buildData.content.preShrine.base[stat.name])
                     if (stat.value >= 75 || buildData.content.preShrine.base[stat.name] >= 75) {
                         let short = shorthand[storeStat.indexOf(stat.name)]
-                        tags.innerHTML += `<span class="${stat.name.toLowerCase()}">${short}</span>`
+                        tags.innerHTML += `<span title="${stat.name}" class="${stat.name.toLowerCase()}">${short}</span>`
                         console.log(stat.name)
                     }
 
@@ -760,7 +766,7 @@ function loadBuilds() {
                 if (buildData.content.talents) {
                     buildData.content.talents.forEach(talent => {
                         if (legendaryTalents.includes(talent)) {
-                            tags.innerHTML += `<span class="talent">${talent}</span>`
+                            tags.innerHTML += `<span class="talent" title="${talent}">${talent}</span>`
                         }
                     })
                 }
@@ -803,11 +809,13 @@ function loadBuilds() {
 
                 btn.setAttribute("onmouseenter", `setCopy(true, "${build.url}")`)
                 btn.setAttribute("onmouseleave", `setCopy(false, "")`)
+                btn.title = "Copy to clipboard"
 
                 const btn2 = document.createElement("span")
                 btn2.classList.add("copybtn")
                 btn2.classList.add("buttonstylized")
                 btn2.innerHTML = `<i class="fa-solid fa-list-check"></i>`
+                btn2.title = "Open in checklist"
 
                 btn2.setAttribute("onmouseenter", `setChecklist(true, "${build.url}")`)
                 btn2.setAttribute("onmouseleave", `setChecklist(false, "")`)
@@ -875,8 +883,8 @@ function loadBuilds() {
 
     index = 0
 
+    console.log(`BUILDS LENGTH ${data.length}`)
     console.log(`PINNED LENGTH ${pinned.length}`)
-    console.log(`BUILDS LENGTH ${pinned.length}`)
 
     if (pinned.length >= 1) {
         pinnedTable.style.display = ``
@@ -931,7 +939,7 @@ function addBuild() {
 
     if (foundSame == true) return;
 
-    addbtns.innerHTML = `<div class="loading"><img src="loading.png"></div><span>validating</span>`
+    addbtns.innerHTML = `<div class="loading"><img src="assets/loading.png"></div><span> validating</span>`
 
     const xhr = new XMLHttpRequest();
     xhr.open("GET", `https://api.deepwoken.co/build?id=${id}`); //MNYlcSP8
