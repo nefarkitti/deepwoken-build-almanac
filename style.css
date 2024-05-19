@@ -7,6 +7,12 @@ body {
     margin: 0;
 }
 
+.deepwoken {
+    font-family: "Fondamento", cursive;
+    font-weight: 400;
+    font-style: normal;
+}
+
 * {
     transition: 0.15s !important;
 }
@@ -192,6 +198,10 @@ truecenter {
     padding-bottom: 0.9rem;
     text-indent: 0.6rem;
     text-shadow: 8px 5px black;
+
+    font-family: "Fondamento", cursive;
+    font-weight: 400;
+    font-style: normal;
 }
 
 .checklist {
