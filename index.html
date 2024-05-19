@@ -26,7 +26,7 @@
         </div>
     </div>
     <div class="bg">
-        <div class="thing"><img src="assets/favicon.png" width="75" height="75" alt="" style="image-rendering: pixelated;"><br>v3.1</div>
+        <div class="thing"><img src="assets/favicon.png" width="75" height="75" alt="" style="image-rendering: pixelated;"><br>v3.2</div>
     </div>
     <truecenter class="alt">
         <div class="main-left">
@@ -34,28 +34,32 @@
                 <div class="title">Info</div>
                 <p class="left-content">
 
-                    stat tags are applied if the stat is >=75
+                    stat tags are applied if the stat investment is is over or equal to 50
                     <br>
                     it also shows all legendary cards to get the general gist of a build
                     <br><br>
                     this website uses localstorage to store build data, meaning that clearing it for whatever reason will also clear this. keep that in mind!
                     <br><br>
-                    why isn't the builder one this good
+                    why isn't the builder one like this
 
                 </p>
             </div>
         </div>
         <div class="main">
             <div class="actualthing">
-                <div class="title">Almanac</div>
+                <div class="title">Almanac                         <span id="currentmode">current mode</span></div>
                 <div class="subtitle">
-                    <b style="font-weight: 200;">Gallery</b>
-                    <span id="currentmode">current mode</span>
+                    <b>
+                        <b style="font-weight: 200;white-space: nowrap;" id="galleryText">Gallery</b>
+                    </b>
                     <b id="buttons">
                         <span title="Delete" class="reset-btn modebtn upperbtn" data-mode="delete" id="deletebtn"><i class="fa-solid fa-trash-can"></i></span> 
                         <span title="Edit" class="reset-btn modebtn upperbtn" id="editbtn" data-mode="edit"><i class="fa-solid fa-pencil"></i></span>
                         <span title="Pin" class="reset-btn modebtn upperbtn" id="pinbtn" data-mode="pin"><i class="fa-solid fa-thumbtack"></i></span>
                         <span title="Add new build" onclick="showBuildPopup()" class="addBuild reset-btn" id="addBuild"><i class="fa-solid fa-plus"></i> <span>Add new build</span></span>
+                        <div class="searchBar">
+                            <input type="text" name="" id="searchbar" placeholder="Search builds" onchange="loadSearch()">
+                        </div>
                     </b>
                 </div>
                 <div class="checklist" style="user-select: none;">
@@ -96,6 +100,18 @@
                     <label for="buildLink">Builder Link:</label>
                     <input type="text" name="buildLink" id="buildLink" placeholder="https://deepwoken.co/builder?id=">
                 </div>
+                <div>
+                    <span>Icon</span>
+                    <div class="iconContainer">
+                        <span class="buttonstylized" onclick="changePage(-1)"><i class="fa-solid fa-angle-left"></i></span>
+                        <img id="iconPreview" class="icon" src="talent-icons/unknown.png" alt="">
+                        <span class="buttonstylized" onclick="changePage(1)"><i class="fa-solid fa-angle-right"></i></span>
+                    </div>
+                    <div style="margin: 10px 0px;"></div>
+                    <div class="iconContainer">
+                        <span class="buttonstylized" onclick="changePage(0, true)">default</span>
+                    </div>
+                </div>
             </span>
             <span id="errorText" style="margin-bottom: 10px"></span>
             <div class="betterButtonHolder" id="addbuildbuttons">
@@ -110,6 +126,18 @@
                 <div>
                     <label for="buildName">Build Name:</label>
                     <input type="text" name="buildName" id="editbuildName" maxlength="30">
+                </div>
+                <div>
+                    <span>Icon</span>
+                    <div class="iconContainer">
+                        <span class="buttonstylized" onclick="changePage(-1)"><i class="fa-solid fa-angle-left"></i></span>
+                        <img id="editiconPreview" class="icon" src="talent-icons/unknown.png" alt="">
+                        <span class="buttonstylized" onclick="changePage(1)"><i class="fa-solid fa-angle-right"></i></span>
+                    </div>
+                    <div style="margin: 10px 0px;"></div>
+                    <div class="iconContainer">
+                        <span class="buttonstylized" onclick="changePage(0, true)">default</span>
+                    </div>
                 </div>
             </span>
             <span id="errorText" style="margin-bottom: 10px"></span>

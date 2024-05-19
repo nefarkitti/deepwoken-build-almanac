@@ -1,13 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;600;700;800;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Volkhov&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fondamento:ital@0;1&display=swap');
 
-.material-symbols-sharp {
-  font-variation-settings:
-  'FILL' 1,
-  'wght' 700,
-  'GRAD' 200,
-  'opsz' 48
-}
+/*ignore the fact this is just the echo checklist css*/
 
 body {
     margin: 0;
@@ -69,6 +63,10 @@ truecenter {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+}
+
+.subtitle {
+    font-family: "Fondamento", cursive;
 }
 
 .reset-popup {
@@ -160,8 +158,7 @@ truecenter {
 .main-right .reset-btn {
     text-align: center;
     padding: 0;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+
     font-size: 17px;
     top: 0;
 }
@@ -344,7 +341,7 @@ truecenter {
     cursor: pointer;
   }
 .wrank {
-    -webkit-text-stroke-width: 0.6px;
+    -webkit-text-stroke-width: 0.4px;
     font-weight: 900;
     -webkit-text-stroke-color: black;
     background: -webkit-linear-gradient(#B1EECF, #50BA8A);
@@ -402,17 +399,21 @@ truecenter {
     cursor: pointer;
     height: fit-content;
     text-align: center;
-    top: 0.3rem;
-    right: 0.4rem;
-    margin-right: 0.5rem;
+
+    margin: 0px 4px;
 }
 .reset-btn:hover {
     background-color: #2C3835 !important;
 }
 .subtitle {
-    display: flex;
+    display: inline-flex;
     justify-content: space-between;
     align-items: center;
+    vertical-align: middle;
+    width: 100%;
+}
+.subtitle b {
+    vertical-align: baseline;
 }
 .reset-popup .loading {
     height: fit-content;
@@ -653,7 +654,7 @@ truecenter {
 .loading img {
     width: 50px;
     height: 50px;
-    filter: opacity(30%);
+    filter: opacity(70%);
     animation-name: spinner;
     animation-duration: 0.4s;
     animation-timing-function: linear;
@@ -888,6 +889,32 @@ span.preshrine {
 body.pin .copybtn,body.delete .copybtn,body.edit .copybtn {
     display: none !important;
 }
+.iconContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.iconContainer .buttonstylized {
+    height: 20px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px !important;
+}
+.icon {
+    border-image: url('assets/border.png') 45%;
+    border-image-width: 15px;
+    border-image-outset: 4px;
+    width: 50px;
+    height: 50px;
+}
+
+div.searchBar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 .rankSpan {
     text-align: right !important;
@@ -899,6 +926,7 @@ body.pin .copybtn,body.delete .copybtn,body.edit .copybtn {
     font-style: italic;
     font-family: none;
     font-weight: 900;
+    font-family: "Fondamento", cursive;
 }
 .textcontainer.holder {
     flex-direction: row;
@@ -906,8 +934,14 @@ body.pin .copybtn,body.delete .copybtn,body.edit .copybtn {
     align-items: flex-start;
 }
 .buildimage {
+    border-image: url('assets/border.png') 45%;
+    border-image-width: 15px;
+    border-image-outset: 4px;
     width: 50px;
-    height: 50px
+    height: 50px;
+    margin: 2px;
+    margin-right: 4px;
+    filter: opacity(80%);
 }
 
 .modifiers hr {
@@ -916,12 +950,22 @@ body.pin .copybtn,body.delete .copybtn,body.edit .copybtn {
     border: 2px solid rgba(0, 0, 0, 0);
 }
 
+#buttons {
+    width: inherit;
+}
+
 @media screen and (max-width:1250px) {
+    div.searchBar {
+        display: none !important;
+    }
     body {
         overflow-x: hidden !important;
     }
     .main-left {
         display: none;
+    }
+    .buildimage {
+        display: none !important;
     }
     truecenter.alt {
         flex-direction: column;

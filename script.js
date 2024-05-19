@@ -20,6 +20,7 @@ const notifs = document.getElementById("notif-container")
 const buildName = document.getElementById("buildName")
 const buildLink = document.getElementById("buildLink")
 const buildAdd = document.getElementById("addBuild")
+const searchBar = document.getElementById("searchbar")
 
 let EDITING
 let COPYING = false
@@ -36,9 +37,74 @@ let wpnShorthand = ["HVY", "MED", "LHT"]
 let oaths = ["Arcwarder", "Blindseer", "Contractor", "Dawnwalker", "Fadetrimmer", "Jetstriker", "Linkstrider", "Oathless", "Saltchemist", "Silentheart", "Starkindred", "Visionshaper"]
 let races = ["Adret","Etrean","Vesperian","Canor","Capra","Celtor","Chrysid","Felinor","Ganymede","Gremor","Khan","Tiran"]
 
-buildTable.innerHTML = `<div class="loading"><img src="assets/loading.png"></div>`
+let currentIconPage = 0
+let icons = [
+    "unknown",
+    "bolt",
+    "boots",
+    "chime",
+    "cube",
+    "death",
+    "explosion",
+    "eye",
+    "fire",
+    "fist",
+    "frost",
+    "genius",
+    "handshake",
+    "leaf",
+    "lungs",
+    "mountains",
+    "potion",
+    "saviour",
+    "scratch",
+    "shield",
+    "skeleton",
+    "spark",
+    "sword",
+    "throw",
+    "wind"
+]
+
+buildTable.innerHTML = `<div class="loading"><img src="assets/loading-better-darker.png"></div>`
 line.style.display = `none`
 notifs.innerHTML = ``
+
+let rateLimit = false
+
+searchBar.addEventListener("keyup", function (event) {
+    event.preventDefault();
+    if (event.keyCode === 13) {
+        if (rateLimit == true) {
+            return
+        }
+        rateLimit = true 
+        loadSearch()
+    }
+});
+
+function changePage(inc, override) {
+    console.log(`changing page by ${inc}`)
+    currentIconPage += inc
+    if (currentIconPage >= icons.length) {
+        currentIconPage = 0
+    }
+    if (currentIconPage <= -1) {
+        currentIconPage = icons.length-1
+    }
+
+    if (override == true) {
+        currentIconPage = inc
+    }
+
+    document.getElementById("iconPreview").src = `talent-icons/${icons[currentIconPage]}.png`
+    document.getElementById("editiconPreview").src = `talent-icons/${icons[currentIconPage]}.png`
+
+}
+
+function loadSearch() {
+    loadBuilds(searchBar.value)
+}
 
 function createNotif(html) {
     let div = document.createElement("div")
@@ -429,8 +495,8 @@ function hideBuildStats() {
     statistics.innerHTML = ``
 }
 
-function loadBuilds() {
-    buildTable.innerHTML = `<div class="loading"><img src="assets/loading.png"></div>`
+function loadBuilds(searchParams) {
+    buildTable.innerHTML = `<div class="loading"><img src="assets/loading-better-darker.png"></div>`
     pinnedTable.innerHTML = ``
     statistics.innerHTML = ``
     currentmode.innerHTML = ``
@@ -439,6 +505,8 @@ function loadBuilds() {
     buttons.style.display = `none`
 
     let index = 0
+
+    console.log(`loading displayed builds...`)
 
     modes.forEach(item => {
         console.log(item)
@@ -508,7 +576,7 @@ function loadBuilds() {
         "Tiran": 0
     }
 
-    function createBuild(build, location) {
+    function createBuild(build, location, query) {
 
         const xhr = new XMLHttpRequest();
         xhr.open("GET", `https://api.deepwoken.co/build?id=${build.url}`); //MNYlcSP8
@@ -536,6 +604,30 @@ function loadBuilds() {
                 storeAvgStats[buildData.content.stats.meta.Oath] += 1
                 storeAvgStats[buildData.content.stats.meta.Race] += 1
 
+                if (query && query.length >= 1) { // out of all the horrendous things ive done this might just take the cake
+                    if (build.name.toUpperCase().indexOf(query.toUpperCase()) > -1 
+                    || buildData.content.stats.meta.Oath.toUpperCase().indexOf(query.toUpperCase()) > -1
+                    || buildData.content.stats.meta.Race.toUpperCase().indexOf(query.toUpperCase()) > -1) {
+                    } else {
+                        console.log("no builds to load!")
+                        //buildTable.innerHTML = `<span onclick="showBuildPopup()" class="addBuild" id="addBuild"><i class="fa-solid fa-plus"></i> Add new build</span>`
+                        /*
+                        buildTable.innerHTML = `<i>No builds found...</i>`*/
+                        document.body.classList.remove("normal")
+                        document.body.classList.remove("edit")
+                        document.body.classList.remove("pin")
+                        document.body.classList.remove("delete")
+
+                        buildAdd.style.display = ``
+                        buttons.style.display = ``
+                    
+                        document.body.classList.add("normal")
+                        mode = "normal"
+                        modeHandle("normal")
+                        return
+                    }
+                }
+
                 const div = document.createElement("div")
                 div.id = `build-${build.url}`
                 div.dataset.buildid = build.url
@@ -552,10 +644,6 @@ function loadBuilds() {
                 const holder = document.createElement("div")
                 holder.classList.add("textcontainer")
                 holder.classList.add("holder")
-
-                const img = document.createElement("img")
-                img.src = "hibob/speed.gif"
-                img.classList.add("buildimage")
 
                 const textContainer = document.createElement("div")
                 textContainer.classList.add("textcontainer")
@@ -667,7 +755,7 @@ function loadBuilds() {
                     //storeAvgStats[stat.name] = storeAvgStats[stat.name] + stat.value
                     console.log("loading stats")
                     console.log(buildData.content.preShrine.base[stat.name])
-                    if (stat.value >= 75 || buildData.content.preShrine.base[stat.name] >= 75) {
+                    if (stat.value >= 50 || buildData.content.preShrine.base[stat.name] >= 50) {
                         let short = shorthand[storeStat.indexOf(stat.name)]
                         tags.innerHTML += `<span title="${stat.name}" class="${stat.name.toLowerCase()}">${short}</span>`
                         console.log(stat.name)
@@ -823,7 +911,14 @@ function loadBuilds() {
                 buttonHolder.appendChild(btn2)
                 buttonHolder.appendChild(btn)
 
-                //holder.appendChild(img)
+                if (build.icon && build.icon != "unknown") {
+
+                    const img = document.createElement("img")
+                    img.src = `talent-icons/${build.icon}.png`
+                    img.classList.add("buildimage")
+
+                    holder.appendChild(img)
+                }
                 holder.appendChild(textContainer)
 
                 div.appendChild(holder)
@@ -856,6 +951,8 @@ function loadBuilds() {
                 if (index == (data.length + pinned.length) && mode == "normal") {
                     buildAdd.style.display = ``
                     buttons.style.display = ``
+                    document.getElementById("galleryText").innerHTML = `Gallery (${data.length + pinned.length})`
+                    rateLimit = false
                 }
                 if (mode != "normal") {
                     const btn = document.getElementById(`${mode}btn`)
@@ -891,14 +988,14 @@ function loadBuilds() {
 
         pinned.forEach(build => {
 
-            createBuild(build, "pinned")
+            createBuild(build, "pinned", searchParams)
     
         })
     }
 
     data.forEach(build => {
 
-        createBuild(build, "build")
+        createBuild(build, "build", searchParams)
 
     })
 }
@@ -909,6 +1006,7 @@ function addBuild() {
 
     const name = buildName.value
     const link = buildLink.value
+    const icon = icons[currentIconPage]
 
     if (name.length < 3) return;
 
@@ -939,7 +1037,7 @@ function addBuild() {
 
     if (foundSame == true) return;
 
-    addbtns.innerHTML = `<div class="loading"><img src="assets/loading.png"></div><span> validating</span>`
+    addbtns.innerHTML = `<div class="loading"><img src="assets/loading-better-darker.png"></div><span> validating</span>`
 
     const xhr = new XMLHttpRequest();
     xhr.open("GET", `https://api.deepwoken.co/build?id=${id}`); //MNYlcSP8
@@ -951,7 +1049,8 @@ function addBuild() {
             if (buildData.status == "success") {
                 data.push({
                     "name": name,
-                    "url": id
+                    "url": id,
+                    "icon": icon,
                 })
                 
                 closePopup()
@@ -997,6 +1096,11 @@ function showBuildPopup() {
     buildName.value = ""
     buildLink.style.display = ``
     buildName.placeholder = funnies[Math.ceil(Math.random() * funnies.length - 1)]
+
+    currentIconPage = 0
+
+    document.getElementById("iconPreview").src = `talent-icons/unknown.png`
+
     addbtns.innerHTML = `<span class="buttonstylized" onclick="addBuild()">Add</span>
     <span class="buttonstylized" onclick="closePopup()">Cancel</span>`
     popup.style.display = `flex`
@@ -1011,13 +1115,27 @@ function showEditPopup(dat, pin) {
         document.getElementById("pinner").style.display = ``
     }
     console.log(dat)
+
+    if (dat.icon) {
+        currentIconPage = icons.indexOf(dat.icon)
+        document.getElementById("editiconPreview").src = `talent-icons/${dat.icon}.png`
+        console.log("hi im the icon")
+    } else {
+        currentIconPage = 0
+        document.getElementById("editiconPreview").src = `talent-icons/unknown.png`
+    }
+
     document.getElementById("editbuildName").value = dat.name
     document.getElementById("editbuildName").placeholder = dat.name
+
     editpopup.style.display = `flex`
     buildTable.style.pointerEvents = `none`
+
     document.getElementById("buttons").style.pointerEvents = `none`
+
     pinnedTable.style.pointerEvents = `none`
     buildTable.style.pointerEvents = `none`
+
     EDITING = dat.url
 }
 function closePopup() {
@@ -1034,11 +1152,20 @@ function saveEdit() {
     data.forEach(build => {
         if (build.url == EDITING) {
             buildData = build
+            console.log("found build to edit")
+            return
+        }
+    })
+    pinned.forEach(build => {
+        if (build.url == EDITING) {
+            buildData = build
+            console.log("found build to edit")
             return
         }
     })
     if (buildData) {
         buildData.name = document.getElementById("editbuildName").value
+        buildData.icon = icons[currentIconPage]
         closePopup()
         save()
         loadBuilds()
