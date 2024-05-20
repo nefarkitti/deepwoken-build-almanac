@@ -70,6 +70,23 @@ buildTable.innerHTML = `<div class="loading"><img src="assets/loading-better-dar
 line.style.display = `none`
 notifs.innerHTML = ``
 
+let lightSchemeIcon = document.getElementById('favicon-light');
+let darkSchemeIcon = document.getElementById('favicon-dark');
+
+let matcher = window.matchMedia('(prefers-color-scheme: dark)');
+matcher.addListener(onUpdate);
+onUpdate();
+
+function onUpdate() {
+  if (matcher.matches) {
+    lightSchemeIcon.remove();
+    document.head.append(darkSchemeIcon);
+  } else {
+    document.head.append(lightSchemeIcon);
+    darkSchemeIcon.remove();
+  }
+}
+
 let rateLimit = false
 
 searchBar.addEventListener("keyup", function (event) {
