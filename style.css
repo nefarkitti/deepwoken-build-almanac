@@ -243,7 +243,7 @@ truecenter {
 .checklist table tr td input {
     float: right;
 }
-.checklist table tr td input[type=number] {
+.checklist table tr td input[type=number]:not(.deepwoken) {
     border: none;
     display: flex;
     background:none;
@@ -962,6 +962,9 @@ div.searchBar {
 
 #buttons {
     width: inherit;
+}
+#searchbar {
+    font-family: "Fondamento", cursive !important;
 }
 
 @media screen and (max-width:1250px) {
