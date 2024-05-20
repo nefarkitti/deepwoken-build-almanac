@@ -737,14 +737,14 @@ textarea:focus, input:focus{
 }
 
 .build-name {
-    max-width: 100%;
+    max-width: 85%;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
     display: flex;
 }
 .build-name b {
-    max-width: 100%;
+    max-width: 85%;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -784,6 +784,7 @@ span.talent {
     background-color: #2e8479;
     color: white;
     padding: 0px 5px;
+    z-index: 18;
 }
 
 .willpower {
@@ -937,6 +938,7 @@ div.searchBar {
     font-family: none;
     font-weight: 900;
     font-family: "Fondamento", cursive;
+    z-index: 20;
 }
 .textcontainer.holder {
     flex-direction: row;
