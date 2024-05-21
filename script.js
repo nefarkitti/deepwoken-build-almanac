@@ -771,8 +771,8 @@ function loadBuilds(searchParams) {
                     //why doesnt this work??
                     //storeAvgStats[stat.name] = storeAvgStats[stat.name] + stat.value
                     console.log("loading stats")
-                    console.log(buildData.content.preShrine.base[stat.name])
-                    if (stat.value >= 50 || buildData.content.preShrine.base[stat.name] >= 50) {
+                    //console.log(buildData.content.preShrine.base[stat.name])
+                    if (stat.value >= 50 || (buildData.content.preShrine.base && buildData.content.preShrine.base[stat.name] >= 50) {
                         let short = shorthand[storeStat.indexOf(stat.name)]
                         tags.innerHTML += `<span title="${stat.name}" class="${stat.name.toLowerCase()}">${short}</span>`
                         console.log(stat.name)
