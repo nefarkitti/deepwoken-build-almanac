@@ -79,13 +79,13 @@ matcher.addListener(onUpdate);
 onUpdate();
 
 function onUpdate() {
-  if (matcher.matches) {
-    lightSchemeIcon.remove();
-    document.head.append(darkSchemeIcon);
-  } else {
-    document.head.append(lightSchemeIcon);
-    darkSchemeIcon.remove();
-  }
+    if (matcher.matches) {
+        lightSchemeIcon.remove();
+        document.head.append(darkSchemeIcon);
+    } else {
+        document.head.append(lightSchemeIcon);
+        darkSchemeIcon.remove();
+    }
 }
 
 let rateLimit = false
@@ -96,7 +96,7 @@ searchBar.addEventListener("keyup", function (event) {
         if (rateLimit == true) {
             return
         }
-        rateLimit = true 
+        rateLimit = true
         loadSearch()
     }
 });
@@ -108,7 +108,7 @@ function changePage(inc, override) {
         currentIconPage = 0
     }
     if (currentIconPage <= -1) {
-        currentIconPage = icons.length-1
+        currentIconPage = icons.length - 1
     }
 
     if (override == true) {
@@ -121,7 +121,7 @@ function changePage(inc, override) {
 }
 
 function loadSearch() {
-    loadBuilds(searchBar.value, filter.value)
+    loadBuilds(searchBar.value, /*filter.value*/ "hi")
 }
 
 function createNotif(html) {
@@ -198,8 +198,6 @@ function applyMode(m) {
     if (m == "pin") {
         if (data.length <= 0) return;
     }
-
-    createNotif(`${m} mode!`)
     if (m == "normal") {
         document.querySelectorAll(".build").forEach(build => {
             build.style.background = `rgba(0, 0, 0, 0.078)`
@@ -207,6 +205,7 @@ function applyMode(m) {
         add.style.display = ``
     } else {
         //currentmode.innerHTML = `${m} mode`
+        createNotif(`${m} mode!`)
         const btn = document.getElementById(`${mode}btn`)
         btn.style.backgroundColor = `#2C3835`
         if (m == "delete") {
@@ -691,10 +690,107 @@ function loadBuilds(searchParams, filterParams) {
                     }
                 }*/
 
+                // get stat name with query
+                // query is "heavy"
+                // stat name is "Heavy Wep."
+
+                function searchCheck() {
+
+                    let bool = false
+                    let points = 0
+
+                    // allow for combinations of words?
+                    let queryArr = query.split(" ").map(v => v.toUpperCase())
+
+                    queryArr.forEach(quer => {
+                        if (build.name.toUpperCase().indexOf(quer.toUpperCase()) > -1
+                            || buildData.content.stats.meta.Oath.toUpperCase().indexOf(quer.toUpperCase()) > -1
+                            || buildData.content.stats.meta.Race.toUpperCase().indexOf(quer.toUpperCase()) > -1) {
+                            bool = true
+                        }
+
+                        const capWPN = storeWPN.map(wpn => wpn.toUpperCase());
+                        for (let i = 0; i < capWPN.length; i++) {
+                            if (capWPN[i].toUpperCase().indexOf(quer.toUpperCase()) > -1) {
+                                if (buildData.content.attributes.weapon[storeWPN[i]] >= 1) {
+                                    console.log("found weapon")
+                                    bool = true
+                                    points++
+                                    break
+                                }
+                            }
+                        }
+
+                        const capATN = store.map(atn => atn.toUpperCase());
+                        for (let i = 0; i < capATN.length; i++) {
+                            if (capATN[i].toUpperCase().indexOf(quer.toUpperCase()) > -1) {
+                                if (buildData.content.attributes.attunement[store[i]] >= 1) {
+                                    console.log("found attunement")
+                                    bool = true
+                                    points++
+                                    break
+                                }
+                            }
+                        }
+
+                        const capATT = storeStat.map(att => att.toUpperCase());
+                        for (let i = 0; i < capATT.length; i++) {
+                            console.log(`${quer} VERSUS ${capATT[i]}`)
+                            if (capATT[i].toUpperCase().indexOf(quer.toUpperCase()) > -1) {
+                                if (buildData.content.attributes.base[storeStat[i]] >= 1) {
+                                    console.log("found base")
+                                    bool = true
+                                    points++
+                                    break
+                                }
+                            }
+                        }
+                    })
+
+                    /*if (build.name.toUpperCase().indexOf(query.toUpperCase()) > -1
+                    || buildData.content.stats.meta.Oath.toUpperCase().indexOf(query.toUpperCase()) > -1
+                    || buildData.content.stats.meta.Race.toUpperCase().indexOf(query.toUpperCase()) > -1) {
+                        bool = true
+                    }
+
+                    const capWPN = storeWPN.map(wpn => wpn.toUpperCase());
+                    for (let i =0;i < capWPN.length; i++) {
+                        if (capWPN[i].toUpperCase().indexOf(query.toUpperCase()) > -1) {
+                            if (buildData.content.attributes.weapon[storeWPN[i]] >= 1) {
+                                console.log("found weapon")
+                                bool = true
+                                break
+                            }
+                        }
+                    }
+
+                    const capATN = store.map(atn => atn.toUpperCase());
+                    for (let i =0;i < capATN.length; i++) {
+                        if (capATN[i].toUpperCase().indexOf(query.toUpperCase()) > -1) {
+                            if (buildData.content.attributes.attunement[store[i]] >= 1) {
+                                console.log("found attunement")
+                                bool = true
+                                break
+                            }
+                        }
+                    }
+
+                    const capATT = storeStat.map(att => att.toUpperCase());
+                    for (let i =0;i < capATT.length; i++) {
+                        console.log(`${query} VERSUS ${capATT[i]}`)
+                        if (capATT[i].toUpperCase().indexOf(query.toUpperCase()) > -1) {
+                            if (buildData.content.attributes.base[storeStat [i]] >= 1) {
+                                console.log("found base")
+                                bool = true
+                                break
+                            }
+                        }
+                    }*/
+                    return bool
+                }
+
                 if (query && query.length >= 1) { // out of all the horrendous things ive done this might just take the cake
-                    if (build.name.toUpperCase().indexOf(query.toUpperCase()) > -1
-                        || buildData.content.stats.meta.Oath.toUpperCase().indexOf(query.toUpperCase()) > -1
-                        || buildData.content.stats.meta.Race.toUpperCase().indexOf(query.toUpperCase()) > -1) {
+                    if (searchCheck() == true) {
                     } else {
                         failload()
                         return
@@ -1112,10 +1208,6 @@ function addBuild() {
 
     addbtns.innerHTML = `<div class="validation"><div class="loading"><img src="assets/loading-better-darker.png"></div><span>validating</span></div>`
 
-    if (1 == 1) {
-        return
-    }
-
     const xhr = new XMLHttpRequest();
     xhr.open("GET", `https://api.deepwoken.co/build?id=${id}`); //MNYlcSP8
     xhr.send();
@@ -1285,6 +1377,7 @@ function load() {
     } catch (e) {
         console.log(e)
         console.log("data didn't load properly, throw error and show error overlay.")
+        window.location.reload()
     }
 }
 function save() {
