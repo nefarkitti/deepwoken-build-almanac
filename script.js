@@ -617,10 +617,8 @@ function loadBuilds(searchParams, filterParams) {
                     buildTable.innerHTML = ``
                 }
 
-                console.log(1)
-
                 const buildData = xhr.response;
-                console.log(build.name.toUpperCase())
+                console.log(`--- LOADING BUILD "${build.name.toUpperCase()}" ---`)
                 console.log(buildData);
 
                 if (buildData.status == "failed") {
@@ -786,6 +784,9 @@ function loadBuilds(searchParams, filterParams) {
                             }
                         }
                     }*/
+
+                    // i just cannot figure it out!
+
                     return bool
                 }
 
@@ -818,7 +819,6 @@ function loadBuilds(searchParams, filterParams) {
                 textContainer.classList.add("textcontainer")
 
                 let checklistLinked = false
-                console.log("checklist builds")
                 let checklistBuild = 0
                 try {
                     checklistBuilds.builds.forEach(checkBuild => {
@@ -833,7 +833,7 @@ function loadBuilds(searchParams, filterParams) {
                         }
                     })
                 } catch {
-                    console.log("failed to load checklist builds")
+                    console.log("failed to load checklist build")
                 }
 
                 div.setAttribute("onmouseenter", `showBuildStats(${JSON.stringify(buildData)}, ${JSON.stringify(build)}, ${JSON.stringify(checklistBuild)})`)
@@ -867,24 +867,15 @@ function loadBuilds(searchParams, filterParams) {
                 let attunements = []
                 let weapons = []
 
-                store.forEach(attunement => {
 
-                    //storeAvgStats[attunement] += buildData.content.attributes.attunement[attunement]
-
-                    //console.log(buildData.content.preShrine.attunement[attunement])
-                    console.log(buildData.content.attributes.attunement[attunement])
-                    console.log(attunement)
-                    if (buildData.content.attributes.attunement[attunement] >= 1 || (buildData.content.preShrine && buildData.content.preShrine.attunement[attunement] >= 1)) {
-                        console.log(`add ${attunement}`)
-                        attunements.push(attunement)
-                    }
-                })
                 storeWPN.forEach(weapon => {
 
                     //storeAvgStats[weapon] += buildData.content.attributes.weapon[weapon]
 
+                    
                     if (buildData.content.attributes.weapon[weapon] >= 1) {
                         weapons.push(weapon)
+                        console.log(`add ${weapon}`)
                     }
                 })
                 let STATKEYS = Object.keys(buildData.content.attributes.base)
@@ -897,7 +888,19 @@ function loadBuilds(searchParams, filterParams) {
                         "value": val
                     })
                 }
-                console.log(attunements)
+
+                store.forEach(attunement => {
+
+                    //storeAvgStats[attunement] += buildData.content.attributes.attunement[attunement]
+
+                    //console.log(buildData.content.preShrine.attunement[attunement])
+                    //console.log(attunement,buildData.content.attributes.attunement[attunement])
+                    if (buildData.content.attributes.attunement[attunement] >= 1 || (buildData.content.preShrine && buildData.content.preShrine.attunement[attunement] >= 1)) {
+                        console.log(`add ${attunement}`)
+                        attunements.push(attunement)
+                    }
+                })
+
                 if (attunements.length <= 0) {
                     tags.innerHTML += `<img title="No Attunement" src="attunements/no-attunement-better.png">`
                 } else {
@@ -922,12 +925,12 @@ function loadBuilds(searchParams, filterParams) {
 
                     //why doesnt this work??
                     //storeAvgStats[stat.name] = storeAvgStats[stat.name] + stat.value
-                    console.log("loading stats")
                     //console.log(buildData.content.preShrine.base[stat.name])
                     if (stat.value >= 50 || (buildData.content.preShrine && buildData.content.preShrine.base[stat.name] >= 50)) {
                         let short = shorthand[storeStat.indexOf(stat.name)]
                         tags.innerHTML += `<span title="${stat.name}" class="${stat.name.toLowerCase()}">${short}</span>`
-                        console.log(stat.name)
+                        console.log(`add ${stat.name}`)
+                        //console.log(stat.name, stat.value)
                     }
 
                 })
@@ -1139,6 +1142,8 @@ function loadBuilds(searchParams, filterParams) {
                     })
                     document.getElementById("addBuild").style.display = `none`
                 }
+
+                console.log(`--- FINISHED LOADING BUILD "${build.name.toUpperCase()}" ---`)
 
             } else {
                 console.log(`Error: ${xhr.status}`);
