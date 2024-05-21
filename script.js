@@ -722,7 +722,7 @@ function loadBuilds(searchParams) {
                     //console.log(buildData.content.preShrine.attunement[attunement])
                     console.log(buildData.content.attributes.attunement[attunement])
                     console.log(attunement)
-                    if (buildData.content.attributes.attunement[attunement] >= 1 || buildData.content.preShrine.attunement[attunement] >= 1) {
+                    if (buildData.content.attributes.attunement[attunement] >= 1 || (buildData.content.preShrine && buildData.content.preShrine.attunement[attunement] >= 1)) {
                         console.log(`add ${attunement}`)
                         attunements.push(attunement)
                     }
