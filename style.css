@@ -666,7 +666,7 @@ truecenter {
     height: 50px;
     filter: opacity(70%);
     animation-name: spinner;
-    animation-duration: 0.4s;
+    animation-duration: 1s;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
 }
@@ -967,6 +967,33 @@ div.searchBar {
 }
 #searchbar {
     font-family: "Fondamento", cursive !important;
+}
+
+select {
+    border-image: url('assets/border.png') 45%;
+    border-image-width: 15px;
+    border-image-outset: 2px;
+    background-color: #E5E0CA;
+    width: 60px;
+    margin-left: 5px;
+    font-family: 'Fondamento', cursive;
+    user-select: none;
+}
+select:focus-visible {
+    outline: none;
+}
+option {
+    box-shadow: none;
+}
+
+.validation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.validation span {
+    margin-top: 5px;
 }
 
 @media screen and (max-width:1250px) {

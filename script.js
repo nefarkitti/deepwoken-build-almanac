@@ -21,6 +21,7 @@ const buildName = document.getElementById("buildName")
 const buildLink = document.getElementById("buildLink")
 const buildAdd = document.getElementById("addBuild")
 const searchBar = document.getElementById("searchbar")
+const filter = document.getElementById("filter")
 
 let EDITING
 let COPYING = false
@@ -35,7 +36,7 @@ let elmShorthand = ["LTN", "ICE", "FLM", "IRN", "SDW", "WND"]
 let storeWPN = ["Heavy Wep.", "Medium Wep.", "Light Wep."]
 let wpnShorthand = ["HVY", "MED", "LHT"]
 let oaths = ["Arcwarder", "Blindseer", "Contractor", "Dawnwalker", "Fadetrimmer", "Jetstriker", "Linkstrider", "Oathless", "Saltchemist", "Silentheart", "Starkindred", "Visionshaper"]
-let races = ["Adret","Etrean","Vesperian","Canor","Capra","Celtor","Chrysid","Felinor","Ganymede","Gremor","Khan","Tiran"]
+let races = ["Adret", "Etrean", "Vesperian", "Canor", "Capra", "Celtor", "Chrysid", "Felinor", "Ganymede", "Gremor", "Khan", "Tiran"]
 
 let currentIconPage = 0
 let icons = [
@@ -120,7 +121,7 @@ function changePage(inc, override) {
 }
 
 function loadSearch() {
-    loadBuilds(searchBar.value)
+    loadBuilds(searchBar.value, filter.value)
 }
 
 function createNotif(html) {
@@ -194,13 +195,18 @@ function applyMode(m) {
 
     document.body.classList.add(m)
 
+    if (m == "pin") {
+        if (data.length <= 0) return;
+    }
+
+    createNotif(`${m} mode!`)
     if (m == "normal") {
         document.querySelectorAll(".build").forEach(build => {
             build.style.background = `rgba(0, 0, 0, 0.078)`
         })
         add.style.display = ``
     } else {
-        currentmode.innerHTML = `${m} mode`
+        //currentmode.innerHTML = `${m} mode`
         const btn = document.getElementById(`${mode}btn`)
         btn.style.backgroundColor = `#2C3835`
         if (m == "delete") {
@@ -230,6 +236,9 @@ function modeHandle(m) {
     if ((data.length + pinned.length) <= 0) return
 
     if (mode == "normal") {
+        if (m == "pin") {
+            if (data.length <= 0) return;
+        }
         mode = m
         console.log(`CURRENT MODE: ${mode}`)
         applyMode(mode)
@@ -242,6 +251,9 @@ function modeHandle(m) {
         return
     }
     if (mode != m) {
+        if (m == "pin") {
+            if (data.length <= 0) return;
+        }
         mode = m
         console.log(`CURRENT MODE: ${mode}`)
         applyMode(mode)
@@ -383,14 +395,14 @@ function showBuildStats(build, extraData, checklistData) {
             "Heavy Wep.": `${modifyStatString(build.content.preShrine.weapon["Heavy Wep."])}`,
             "Medium Wep.": `${modifyStatString(build.content.preShrine.weapon["Medium Wep."])}`,
             "Light Wep.": `${modifyStatString(build.content.preShrine.weapon["Light Wep."])}`,
-    
+
             "Flamecharm": `${modifyStatString(build.content.preShrine.attunement["Flamecharm"])}`,
             "Frostdraw": `${modifyStatString(build.content.preShrine.attunement["Frostdraw"])}`,
             "Thundercall": `${modifyStatString(build.content.preShrine.attunement["Thundercall"])}`,
             "Galebreathe": `${modifyStatString(build.content.preShrine.attunement["Galebreathe"])}`,
             "Shadowcast": `${modifyStatString(build.content.preShrine.attunement["Shadowcast"])}`,
             "Ironsing": `${modifyStatString(build.content.preShrine.attunement["Ironsing"])}`,
-    
+
             "Strength": `${modifyStatString(build.content.preShrine.base["Strength"])}`,
             "Fortitude": `${modifyStatString(build.content.preShrine.base["Fortitude"])}`,
             "Agility": `${modifyStatString(build.content.preShrine.base["Agility"])}`,
@@ -512,12 +524,12 @@ function hideBuildStats() {
     statistics.innerHTML = ``
 }
 
-function loadBuilds(searchParams) {
+function loadBuilds(searchParams, filterParams) {
     buildTable.innerHTML = `<div class="loading"><img src="assets/loading-better-darker.png"></div>`
     pinnedTable.innerHTML = ``
     statistics.innerHTML = ``
     currentmode.innerHTML = ``
-    line.style.display =`none`
+    line.style.display = `none`
     buildAdd.style.display = `none`
     buttons.style.display = `none`
 
@@ -540,7 +552,7 @@ function loadBuilds(searchParams) {
         document.body.classList.remove("edit")
         document.body.classList.remove("pin")
         document.body.classList.remove("delete")
-    
+
         document.body.classList.add("normal")
         mode = "normal"
         modeHandle("normal")
@@ -593,7 +605,7 @@ function loadBuilds(searchParams) {
         "Tiran": 0
     }
 
-    function createBuild(build, location, query) {
+    function createBuild(build, location, query, filter) {
 
         const xhr = new XMLHttpRequest();
         xhr.open("GET", `https://api.deepwoken.co/build?id=${build.url}`); //MNYlcSP8
@@ -614,33 +626,77 @@ function loadBuilds(searchParams) {
 
                 if (buildData.status == "failed") {
                     createNotif(`Failed to load ${build.name}`)
-                    index ++
+                    index++
                     return
                 }
 
                 storeAvgStats[buildData.content.stats.meta.Oath] += 1
                 storeAvgStats[buildData.content.stats.meta.Race] += 1
 
-                if (query && query.length >= 1) { // out of all the horrendous things ive done this might just take the cake
-                    if (build.name.toUpperCase().indexOf(query.toUpperCase()) > -1 
-                    || buildData.content.stats.meta.Oath.toUpperCase().indexOf(query.toUpperCase()) > -1
-                    || buildData.content.stats.meta.Race.toUpperCase().indexOf(query.toUpperCase()) > -1) {
-                    } else {
-                        console.log("no builds to load!")
-                        //buildTable.innerHTML = `<span onclick="showBuildPopup()" class="addBuild" id="addBuild"><i class="fa-solid fa-plus"></i> Add new build</span>`
-                        /*
-                        buildTable.innerHTML = `<i>No builds found...</i>`*/
-                        document.body.classList.remove("normal")
-                        document.body.classList.remove("edit")
-                        document.body.classList.remove("pin")
-                        document.body.classList.remove("delete")
+                console.log(`FILTER: ${filter}`)
 
-                        buildAdd.style.display = ``
-                        buttons.style.display = ``
-                    
-                        document.body.classList.add("normal")
-                        mode = "normal"
-                        modeHandle("normal")
+                function failload() {
+                    console.log("no builds to load!")
+                    //buildTable.innerHTML = `<span onclick="showBuildPopup()" class="addBuild" id="addBuild"><i class="fa-solid fa-plus"></i> Add new build</span>`
+                    /*
+                    buildTable.innerHTML = `<i>No builds found...</i>`*/
+                    document.body.classList.remove("normal")
+                    document.body.classList.remove("edit")
+                    document.body.classList.remove("pin")
+                    document.body.classList.remove("delete")
+
+                    buildAdd.style.display = ``
+                    buttons.style.display = ``
+
+                    document.body.classList.add("normal")
+                    mode = "normal"
+                    modeHandle("normal")
+                }
+
+                /*if (filter && filter.length >= 1) {
+                    console.log(`SEARCHING WITH FILTER ${filter}`)
+
+                    console.log("checking attunement")
+                    if (buildData.content.attributes.attunement[filter] || (buildData.content.preShrine && buildData.content.preShrine.attunement[filter])) {
+                        console.log("attunement value exists!")
+                        if (buildData.content.attributes.attunement[filter] >= 1 || (buildData.content.preShrine && buildData.content.preShrine.attunement[filter] >= 1)) {
+                            // yea this exists
+                            console.log("attunement check succeeded")
+                        } else {
+                            return console.log("attunement check failed");failload();
+                        }
+                    }
+
+                    console.log("checking base")
+                    console.log(buildData.content.attributes.base[filter])
+                    if (buildData.content.attributes.base[filter] >= 0 || (buildData.content.preShrine && buildData.content.preShrine.base[filter] >= 0)) {
+                        console.log("base value exists!")
+                        if (buildData.content.attributes.base[filter] >= 1 || (buildData.content.preShrine && buildData.content.preShrine.base[filter] >= 1)) {
+                            // yea this exists
+                            console.log("base check succeeded")
+                        } else {
+                            return console.log("base check failed")
+                        }
+                    }
+
+                    console.log("checking weapon")
+                    if (buildData.content.attributes.weapon[filter] || (buildData.content.preShrine && buildData.content.preShrine.weapon[filter])) {
+                        console.log("weapon value exists!")
+                        if (buildData.content.attributes.weapon[filter] >= 1 || (buildData.content.preShrine && buildData.content.preShrine.weapon[filter] >= 1)) {
+                            // yea this exists
+                            console.log("weapon check succeeded")
+                        } else {
+                            return console.log("weapon check failed")
+                        }
+                    }
+                }*/
+
+                if (query && query.length >= 1) { // out of all the horrendous things ive done this might just take the cake
+                    if (build.name.toUpperCase().indexOf(query.toUpperCase()) > -1
+                        || buildData.content.stats.meta.Oath.toUpperCase().indexOf(query.toUpperCase()) > -1
+                        || buildData.content.stats.meta.Race.toUpperCase().indexOf(query.toUpperCase()) > -1) {
+                    } else {
+                        failload()
                         return
                     }
                 }
@@ -669,17 +725,17 @@ function loadBuilds(searchParams) {
                 console.log("checklist builds")
                 let checklistBuild = 0
                 try {
-                    checklistBuilds.builds.forEach(checkBuild=>{
+                    checklistBuilds.builds.forEach(checkBuild => {
                         if (checkBuild.buildurl == `https://deepwoken.co/builder?id=${build.url}`) {
-                        checklistBuild = checkBuild
-                         let rankSpan = document.createElement("span")
-                         rankSpan.classList.add("rankSpan")
-                         rankSpan.innerHTML = checkBuild.buildrank
-                         rankSpan.classList.add(`${checkBuild.buildrank.toLowerCase()}rank`)
-                         div.appendChild(rankSpan)
-                         checklistLinked = true
+                            checklistBuild = checkBuild
+                            let rankSpan = document.createElement("span")
+                            rankSpan.classList.add("rankSpan")
+                            rankSpan.innerHTML = checkBuild.buildrank
+                            rankSpan.classList.add(`${checkBuild.buildrank.toLowerCase()}rank`)
+                            div.appendChild(rankSpan)
+                            checklistLinked = true
                         }
-                     })
+                    })
                 } catch {
                     console.log("failed to load checklist builds")
                 }
@@ -716,7 +772,7 @@ function loadBuilds(searchParams) {
                 let weapons = []
 
                 store.forEach(attunement => {
-                    
+
                     //storeAvgStats[attunement] += buildData.content.attributes.attunement[attunement]
 
                     //console.log(buildData.content.preShrine.attunement[attunement])
@@ -772,7 +828,6 @@ function loadBuilds(searchParams) {
                     //storeAvgStats[stat.name] = storeAvgStats[stat.name] + stat.value
                     console.log("loading stats")
                     //console.log(buildData.content.preShrine.base[stat.name])
-                    
                     if (stat.value >= 50 || (buildData.content.preShrine && buildData.content.preShrine.base[stat.name] >= 50)) {
                         let short = shorthand[storeStat.indexOf(stat.name)]
                         tags.innerHTML += `<span title="${stat.name}" class="${stat.name.toLowerCase()}">${short}</span>`
@@ -954,16 +1009,16 @@ function loadBuilds(searchParams) {
                 document.body.classList.remove("edit")
                 document.body.classList.remove("pin")
                 document.body.classList.remove("delete")
-            
+
                 document.body.classList.add("normal")
                 mode = "normal"
-                
-                line.style.display =`none`
+
+                line.style.display = `none`
                 if (pinned.length >= 1) {
                     line.style.display = ``
                 } else {
                     pinnedTable.style.display = `none`
-                    line.style.display =`none`
+                    line.style.display = `none`
                 }
 
                 if (index == (data.length + pinned.length) && mode == "normal") {
@@ -1006,14 +1061,14 @@ function loadBuilds(searchParams) {
 
         pinned.forEach(build => {
 
-            createBuild(build, "pinned", searchParams)
-    
+            createBuild(build, "pinned", searchParams, filterParams)
+
         })
     }
 
     data.forEach(build => {
 
-        createBuild(build, "build", searchParams)
+        createBuild(build, "build", searchParams, filterParams)
 
     })
 }
@@ -1055,7 +1110,11 @@ function addBuild() {
 
     if (foundSame == true) return;
 
-    addbtns.innerHTML = `<div class="loading"><img src="assets/loading-better-darker.png"></div><span> validating</span>`
+    addbtns.innerHTML = `<div class="validation"><div class="loading"><img src="assets/loading-better-darker.png"></div><span>validating</span></div>`
+
+    if (1 == 1) {
+        return
+    }
 
     const xhr = new XMLHttpRequest();
     xhr.open("GET", `https://api.deepwoken.co/build?id=${id}`); //MNYlcSP8
@@ -1070,7 +1129,7 @@ function addBuild() {
                     "url": id,
                     "icon": icon,
                 })
-                
+
                 closePopup()
                 save()
                 loadBuilds()
