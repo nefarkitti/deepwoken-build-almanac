@@ -388,26 +388,26 @@ function showBuildStats(build, extraData, checklistData) {
         "Charisma": ""
     }
     //console.log("shrine check")
-    if (build.content.preShrine) {
+    if (build.preShrine) {
         shrine = true
         Object.assign(preShrineStats, {
-            "Heavy Wep.": `${modifyStatString(build.content.preShrine.weapon["Heavy Wep."])}`,
-            "Medium Wep.": `${modifyStatString(build.content.preShrine.weapon["Medium Wep."])}`,
-            "Light Wep.": `${modifyStatString(build.content.preShrine.weapon["Light Wep."])}`,
+            "Heavy Wep.": `${modifyStatString(build.preShrine.weapon["Heavy Wep."])}`,
+            "Medium Wep.": `${modifyStatString(build.preShrine.weapon["Medium Wep."])}`,
+            "Light Wep.": `${modifyStatString(build.preShrine.weapon["Light Wep."])}`,
 
-            "Flamecharm": `${modifyStatString(build.content.preShrine.attunement["Flamecharm"])}`,
-            "Frostdraw": `${modifyStatString(build.content.preShrine.attunement["Frostdraw"])}`,
-            "Thundercall": `${modifyStatString(build.content.preShrine.attunement["Thundercall"])}`,
-            "Galebreathe": `${modifyStatString(build.content.preShrine.attunement["Galebreathe"])}`,
-            "Shadowcast": `${modifyStatString(build.content.preShrine.attunement["Shadowcast"])}`,
-            "Ironsing": `${modifyStatString(build.content.preShrine.attunement["Ironsing"])}`,
+            "Flamecharm": `${modifyStatString(build.preShrine.attunement["Flamecharm"])}`,
+            "Frostdraw": `${modifyStatString(build.preShrine.attunement["Frostdraw"])}`,
+            "Thundercall": `${modifyStatString(build.preShrine.attunement["Thundercall"])}`,
+            "Galebreathe": `${modifyStatString(build.preShrine.attunement["Galebreathe"])}`,
+            "Shadowcast": `${modifyStatString(build.preShrine.attunement["Shadowcast"])}`,
+            "Ironsing": `${modifyStatString(build.preShrine.attunement["Ironsing"])}`,
 
-            "Strength": `${modifyStatString(build.content.preShrine.base["Strength"])}`,
-            "Fortitude": `${modifyStatString(build.content.preShrine.base["Fortitude"])}`,
-            "Agility": `${modifyStatString(build.content.preShrine.base["Agility"])}`,
-            "Intelligence": `${modifyStatString(build.content.preShrine.base["Intelligence"])}`,
-            "Willpower": `${modifyStatString(build.content.preShrine.base["Willpower"])}`,
-            "Charisma": `${modifyStatString(build.content.preShrine.base["Charisma"])}`
+            "Strength": `${modifyStatString(build.preShrine.base["Strength"])}`,
+            "Fortitude": `${modifyStatString(build.preShrine.base["Fortitude"])}`,
+            "Agility": `${modifyStatString(build.preShrine.base["Agility"])}`,
+            "Intelligence": `${modifyStatString(build.preShrine.base["Intelligence"])}`,
+            "Willpower": `${modifyStatString(build.preShrine.base["Willpower"])}`,
+            "Charisma": `${modifyStatString(build.preShrine.base["Charisma"])}`
         })
     }
 
@@ -1238,38 +1238,12 @@ function addBuild() {
     }
 }
 
-const funnies = [
-    "Top Chime Silentheart Deto Petra's",
-    "Best PvE", "Godseeker Shadow Crypt",
-    "Blindseer Guns LFT",
-    "Railblade Edenkite Silentheart",
-    "Markor’s Inheritor Blademaster",
-    "Dawnwalker Gale",
-    "El Primo Legion Kata",
-    "Evanspear Chilling",
-    "Frostdraw Stilleto",
-    "Duke cosplay",
-    "Ferryman cosplay",
-    "Shadow Contractor Crypt",
-    "Flame Shadow Hero Blade",
-    "Bossraid Oni",
-    "Silentheart Guns",
-    "Godseeker Thundercall Stormseye",
-    "Spear Jetstriker",
-    "Detonation Rapier",
-    "new top 50 build",
-    "IRONSING META",
-    "FLAMECHARM META",
-    "mantra spam #234",
-    "Frost Mage",
-    "Shadow Ironsing",
-    "Azure Pyrekeeper"
-]
+// they were not funny.
 function showBuildPopup() {
     buildLink.value = ""
     buildName.value = ""
     buildLink.style.display = ``
-    buildName.placeholder = funnies[Math.ceil(Math.random() * funnies.length - 1)]
+    buildName.placeholder = `${wpnShorthand[Math.ceil(Math.random() * wpnShorthand.length - 1)]} ${store[Math.ceil(Math.random() * store.length - 1)]} ${oaths[Math.ceil(Math.random() * oaths.length - 1)]}`
 
     currentIconPage = 0
 
