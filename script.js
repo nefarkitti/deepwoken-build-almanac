@@ -1219,8 +1219,9 @@ function addBuild() {
     xhr.responseType = "json";
     xhr.onload = () => {
         if (xhr.readyState == 4 && xhr.status == 200) {
+            console.log("passed xhr")
             let buildData = xhr.response
-            if (buildData.status == "success") {
+            if (!buildData.error) {
                 data.push({
                     "name": name,
                     "url": id,
@@ -1234,6 +1235,9 @@ function addBuild() {
                 addbtns.innerHTML = `<span class="buttonstylized" onclick="addBuild()">Add</span>
                 <span class="buttonstylized" onclick="closePopup()">Cancel</span>`
             }
+        } else {
+                addbtns.innerHTML = `<span class="buttonstylized" onclick="addBuild()">Add</span>
+                <span class="buttonstylized" onclick="closePopup()">Cancel</span>`
         }
     }
 }
