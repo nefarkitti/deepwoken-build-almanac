@@ -418,11 +418,11 @@ function showBuildStats(build, extraData, checklistData) {
     statistics.innerHTML = `
     <span class="statline">
     <span>Oath </span>
-    <span>${build.content.stats.meta.Oath}</span>
+    <span>${build.stats.meta.Oath}</span>
     </span>
     <span class="statline">
     <span>Race </span>
-    <span>${build.content.stats.meta.Race}</span>
+    <span>${build.stats.meta.Race}</span>
     </span>
     <span class="statline">
     <span>Rank </span>
@@ -433,15 +433,15 @@ function showBuildStats(build, extraData, checklistData) {
 
     <span class="statline">
     <span>Heavy Weapon </span>
-    <span><span class="preshrine">${preShrineStats["Heavy Wep."]}</span> ${build.content.attributes.weapon["Heavy Wep."]}</span>
+    <span><span class="preshrine">${preShrineStats["Heavy Wep."]}</span> ${build.attributes.weapon["Heavy Wep."]}</span>
     </span>
     <span class="statline">
     <span>Medium Weapon </span>
-    <span><span class="preshrine">${preShrineStats["Medium Wep."]}</span> ${build.content.attributes.weapon["Medium Wep."]}</span>
+    <span><span class="preshrine">${preShrineStats["Medium Wep."]}</span> ${build.attributes.weapon["Medium Wep."]}</span>
     </span>
     <span class="statline">
     <span>Light Weapon </span>
-    <span><span class="preshrine">${preShrineStats["Light Wep."]}</span> ${build.content.attributes.weapon["Light Wep."]}</span>
+    <span><span class="preshrine">${preShrineStats["Light Wep."]}</span> ${build.attributes.weapon["Light Wep."]}</span>
     </span>
 
     <hr>
@@ -449,53 +449,53 @@ function showBuildStats(build, extraData, checklistData) {
     <div id="build-attunements">
     <span class="statline">
     <span>Flamecharm </span>
-    <span><span class="preshrine">${preShrineStats["Flamecharm"]}</span> ${build.content.attributes.attunement.Flamecharm}</span>
+    <span><span class="preshrine">${preShrineStats["Flamecharm"]}</span> ${build.attributes.attunement.Flamecharm}</span>
     </span>
     <span class="statline">
     <span>Frostdraw </span>
-    <span><span class="preshrine">${preShrineStats["Frostdraw"]}</span> ${build.content.attributes.attunement.Frostdraw}</span>
+    <span><span class="preshrine">${preShrineStats["Frostdraw"]}</span> ${build.attributes.attunement.Frostdraw}</span>
     </span>
     <span class="statline">
     <span>Thundercall </span>
-    <span><span class="preshrine">${preShrineStats["Thundercall"]}</span> ${build.content.attributes.attunement.Thundercall}</span>
+    <span><span class="preshrine">${preShrineStats["Thundercall"]}</span> ${build.attributes.attunement.Thundercall}</span>
     </span>
     <span class="statline">
     <span>Galebreathe </span>
-    <span><span class="preshrine">${preShrineStats["Galebreathe"]}</span> ${build.content.attributes.attunement.Galebreathe}</span>
+    <span><span class="preshrine">${preShrineStats["Galebreathe"]}</span> ${build.attributes.attunement.Galebreathe}</span>
     </span>
     <span class="statline">
     <span>Shadowcast </span>
-    <span><span class="preshrine">${preShrineStats["Shadowcast"]}</span> ${build.content.attributes.attunement.Shadowcast}</span>
+    <span><span class="preshrine">${preShrineStats["Shadowcast"]}</span> ${build.attributes.attunement.Shadowcast}</span>
     </span>
     <span class="statline">
     <span>Ironsing </span>
-    <span><span class="preshrine">${preShrineStats["Ironsing"]}</span> ${build.content.attributes.attunement.Ironsing}</span>
+    <span><span class="preshrine">${preShrineStats["Ironsing"]}</span> ${build.attributes.attunement.Ironsing}</span>
     </span>
     </div>
 
     <span class="statline">
     <span>Strength </span>
-    <span><span class="preshrine">${preShrineStats["Strength"]}</span> ${build.content.attributes.base.Strength}</span>
+    <span><span class="preshrine">${preShrineStats["Strength"]}</span> ${build.attributes.base.Strength}</span>
     </span>
     <span class="statline">
     <span>Fortitude </span>
-    <span><span class="preshrine">${preShrineStats["Fortitude"]}</span> ${build.content.attributes.base.Fortitude}</span>
+    <span><span class="preshrine">${preShrineStats["Fortitude"]}</span> ${build.attributes.base.Fortitude}</span>
     </span>
     <span class="statline">
     <span>Agility </span>
-    <span><span class="preshrine">${preShrineStats["Agility"]}</span> ${build.content.attributes.base.Agility}</span>
+    <span><span class="preshrine">${preShrineStats["Agility"]}</span> ${build.attributes.base.Agility}</span>
     </span>
     <span class="statline">
     <span>Intelligence </span>
-    <span><span class="preshrine">${preShrineStats["Intelligence"]}</span> ${build.content.attributes.base.Intelligence}</span>
+    <span><span class="preshrine">${preShrineStats["Intelligence"]}</span> ${build.attributes.base.Intelligence}</span>
     </span>
     <span class="statline">
     <span>Willpower </span>
-    <span><span class="preshrine">${preShrineStats["Willpower"]}</span> ${build.content.attributes.base.Willpower}</span>
+    <span><span class="preshrine">${preShrineStats["Willpower"]}</span> ${build.attributes.base.Willpower}</span>
     </span>
     <span class="statline">
     <span>Charisma </span>
-    <span><span class="preshrine">${preShrineStats["Charisma"]}</span> ${build.content.attributes.base.Charisma}</span>
+    <span><span class="preshrine">${preShrineStats["Charisma"]}</span> ${build.attributes.base.Charisma}</span>
     </span>
     `
 
@@ -504,12 +504,12 @@ function showBuildStats(build, extraData, checklistData) {
 
     let attuned = false
     store.forEach(attunement => {
-        if (build.content.attributes.attunement[attunement] >= 1) {
+        if (build.attributes.attunement[attunement] >= 1) {
             attuned = true
             attunementsDiv.innerHTML += `
             <span class="statline">
             <span>${attunement} </span>
-            <span><span class="preshrine">${preShrineStats[attunement]}</span> ${build.content.attributes.attunement[attunement]}</span>
+            <span><span class="preshrine">${preShrineStats[attunement]}</span> ${build.attributes.attunement[attunement]}</span>
             </span>
             `
         }
@@ -627,8 +627,8 @@ function loadBuilds(searchParams, filterParams) {
                     return
                 }
 
-                storeAvgStats[buildData.content.stats.meta.Oath] += 1
-                storeAvgStats[buildData.content.stats.meta.Race] += 1
+                storeAvgStats[buildData.meta.Oath] += 1
+                storeAvgStats[buildData.meta.Race] += 1
 
                 console.log(`FILTER: ${filter}`)
 
@@ -702,15 +702,15 @@ function loadBuilds(searchParams, filterParams) {
 
                     queryArr.forEach(quer => {
                         if (build.name.toUpperCase().indexOf(quer.toUpperCase()) > -1
-                            || buildData.content.stats.meta.Oath.toUpperCase().indexOf(quer.toUpperCase()) > -1
-                            || buildData.content.stats.meta.Race.toUpperCase().indexOf(quer.toUpperCase()) > -1) {
+                            || buildData.stats.meta.Oath.toUpperCase().indexOf(quer.toUpperCase()) > -1
+                            || buildData.stats.meta.Race.toUpperCase().indexOf(quer.toUpperCase()) > -1) {
                             bool = true
                         }
 
                         const capWPN = storeWPN.map(wpn => wpn.toUpperCase());
                         for (let i = 0; i < capWPN.length; i++) {
                             if (capWPN[i].toUpperCase().indexOf(quer.toUpperCase()) > -1) {
-                                if (buildData.content.attributes.weapon[storeWPN[i]] >= 1) {
+                                if (buildData.attributes.weapon[storeWPN[i]] >= 1) {
                                     console.log("found weapon")
                                     bool = true
                                     points++
@@ -722,7 +722,7 @@ function loadBuilds(searchParams, filterParams) {
                         const capATN = store.map(atn => atn.toUpperCase());
                         for (let i = 0; i < capATN.length; i++) {
                             if (capATN[i].toUpperCase().indexOf(quer.toUpperCase()) > -1) {
-                                if (buildData.content.attributes.attunement[store[i]] >= 1) {
+                                if (buildData.attributes.attunement[store[i]] >= 50|| (buildData.preShrine && buildData.preShrine.attunement[store[i]] >= 50)) {
                                     console.log("found attunement")
                                     bool = true
                                     points++
@@ -735,7 +735,7 @@ function loadBuilds(searchParams, filterParams) {
                         for (let i = 0; i < capATT.length; i++) {
                             console.log(`${quer} VERSUS ${capATT[i]}`)
                             if (capATT[i].toUpperCase().indexOf(quer.toUpperCase()) > -1) {
-                                if (buildData.content.attributes.base[storeStat[i]] >= 1) {
+                                if (buildData.content.attributes.base[storeStat[i]] >= 50|| (buildData.content.preShrine && buildData.content.preShrine.base[storeStat[i]] >= 50)) {
                                     console.log("found base")
                                     bool = true
                                     points++
@@ -809,7 +809,7 @@ function loadBuilds(searchParams, filterParams) {
 
                 // i love webjs!
                 div.setAttribute("onclick", `handleBuildClick("${build.url}")`)
-                div.title = buildData.content.stats.buildName
+                div.title = buildData.stats.buildName
 
                 const holder = document.createElement("div")
                 holder.classList.add("textcontainer")
@@ -873,13 +873,13 @@ function loadBuilds(searchParams, filterParams) {
                     //storeAvgStats[weapon] += buildData.content.attributes.weapon[weapon]
 
                     
-                    if (buildData.content.attributes.weapon[weapon] >= 1) {
+                    if (buildData.attributes.weapon[weapon] >= 1) {
                         weapons.push(weapon)
                         console.log(`add ${weapon}`)
                     }
                 })
-                let STATKEYS = Object.keys(buildData.content.attributes.base)
-                let STATVALUES = Object.values(buildData.content.attributes.base)
+                let STATKEYS = Object.keys(buildData.attributes.base)
+                let STATVALUES = Object.values(buildData.attributes.base)
                 for (let i = 0; i < storeStat.length; i++) {
                     let key = STATKEYS[i]
                     let val = STATVALUES[i]
@@ -895,7 +895,7 @@ function loadBuilds(searchParams, filterParams) {
 
                     //console.log(buildData.content.preShrine.attunement[attunement])
                     //console.log(attunement,buildData.content.attributes.attunement[attunement])
-                    if (buildData.content.attributes.attunement[attunement] >= 1 || (buildData.content.preShrine && buildData.content.preShrine.attunement[attunement] >= 1)) {
+                    if (buildData.attributes.attunement[attunement] >= 1 || (buildData.content.preShrine && buildData.content.preShrine.attunement[attunement] >= 1)) {
                         console.log(`add ${attunement}`)
                         attunements.push(attunement)
                     }
@@ -1035,15 +1035,15 @@ function loadBuilds(searchParams, filterParams) {
 
                 let extra = document.createElement("span")
                 extra.classList.add("extra")
-                extra.innerHTML = `<b style="font-weight: 600;">${buildData.content.stats.meta.Race} ${buildData.content.stats.meta.Oath}</b>`
+                extra.innerHTML = `<b style="font-weight: 600;">${buildData.stats.meta.Race} ${buildData.stats.meta.Oath}</b>`
 
                 let extra3 = document.createElement("span")
                 extra3.classList.add("extra")
                 extra3.innerHTML = `<b style="font-weight: 600;font-style:normal;font-size:10px;">
-                VIT ${buildData.content.stats.traits.Vitality} 
-                ERU ${buildData.content.stats.traits.Erudition} 
-                PRO ${buildData.content.stats.traits.Proficiency} 
-                SNG ${buildData.content.stats.traits.Songchant}</b>`
+                VIT ${buildData.stats.traits.Vitality} 
+                ERU ${buildData.stats.traits.Erudition} 
+                PRO ${buildData.stats.traits.Proficiency} 
+                SNG ${buildData.stats.traits.Songchant}</b>`
 
                 textContainer.appendChild(extra)
                 textContainer.appendChild(extra3)
@@ -1051,8 +1051,8 @@ function loadBuilds(searchParams, filterParams) {
                 let extra2 = document.createElement("span")
                 extra2.classList.add("extra")
 
-                if (buildData.content.stats.buildAuthor.length >= 1) {
-                    extra2.innerText = `by ${buildData.content.stats.buildAuthor}`
+                if (buildData.stats.buildAuthor.length >= 1) {
+                    extra2.innerText = `by ${buildData.stats.buildAuthor}`
                 } else {
                     extra2.innerText = `by Nobody!`
                 }
